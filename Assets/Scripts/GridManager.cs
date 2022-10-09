@@ -9,6 +9,10 @@ public class GridManager : MonoBehaviour
     public GameObject terrain;
     public GameObject back;
     public GameObject spike;
+    public GameObject flag;
+    public GameObject bsky;
+
+
 
     public Sprite[] sprites;
     public float[,] Grid;
@@ -27,8 +31,8 @@ public class GridManager : MonoBehaviour
                                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
                                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
                                     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-                                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-                                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4 },
+                                    { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3 },
                                     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0 },
                                     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0 }};
 
@@ -74,7 +78,7 @@ public class GridManager : MonoBehaviour
             sr.name = "Background X: " + x + "Y:" + y;
             sr.sprite = sprites[(int)value];
 
-        }else
+        }else if(value == 2)
         {
             SpriteRenderer sr = Instantiate(spike, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
             SpriteRenderer srb = Instantiate(back, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
@@ -83,6 +87,19 @@ public class GridManager : MonoBehaviour
             sr.sprite = sprites[(int)value];
             srb.sprite = sprites[1];
 
+        } else if(value == 3)
+        {
+            SpriteRenderer sr = Instantiate(flag, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
+            SpriteRenderer srb = Instantiate(back, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
+
+            sr.name = "Spikes X: " + x + "Y:" + y;
+            sr.sprite = sprites[(int)value];
+            srb.sprite = sprites[1];
+        } else
+        {
+            SpriteRenderer sr = Instantiate(bsky, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
+            sr.name = "Terrain X: " + x + "Y:" + y;
+            sr.sprite = sprites[(int)value];
         }
 
 
