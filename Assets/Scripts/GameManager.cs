@@ -71,6 +71,23 @@ public class GameManager : MonoBehaviour
         LoadLevel(world, stage + 1);
     }
 
+    public void EndLevel()
+    {
+        print("Level finished");
+    }
+
+    public void WinLevel()
+    {
+        print("Level won!");
+        ResetLevel(2f);
+    }
+
+    public void LoseLevel()
+    {
+        print("Level lost!");
+        ResetLevel(2f);
+    }
+
     public void ResetLevel(float delay)
     {
         Invoke(nameof(ResetLevel), delay);

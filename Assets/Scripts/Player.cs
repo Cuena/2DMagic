@@ -47,6 +47,24 @@ public class Player : MonoBehaviour
         GameManager.Instance.ResetLevel(3f);
     }
 
+
+    public void FinishLevel()
+    {
+        smallRenderer.enabled = false;
+        bigRenderer.enabled = false;
+    }
+    public void WinLevel()
+    {
+        FinishLevel();
+        GameManager.Instance.ResetLevel(2f);
+    }
+
+    public void LoseLevel()
+    {
+        FinishLevel();
+        GameManager.Instance.ResetLevel(2f);
+    }
+
     public void Grow()
     {
         smallRenderer.enabled = false;
