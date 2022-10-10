@@ -7,12 +7,12 @@ public class WinBarrier : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.gameObject.SetActive(false);
-            GameManager.Instance.WinLevel();
+            //other.gameObject.SetActive(false);
+            //GameManager.Instance.WinLevel();
         }
         else
         {
-            Destroy(other.gameObject);
+            //Destroy(other.gameObject);
         }
     }
 

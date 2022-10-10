@@ -58,10 +58,8 @@ public class Mov : MonoBehaviour
         }
 
         ApplyGravity();
-    }
 
-    private void FixedUpdate()
-    {
+
         // move mario based on his velocity
         Vector2 position = rigidbody.position;
         position += velocity * Time.fixedDeltaTime;
@@ -72,6 +70,15 @@ public class Mov : MonoBehaviour
         position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
 
         rigidbody.MovePosition(position);
+
+
+
+
+    }
+
+    private void FixedUpdate()
+    {
+
     }
 
     private void HorizontalMovement()
