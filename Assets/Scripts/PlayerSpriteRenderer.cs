@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerSpriteRenderer : MonoBehaviour
 {
-    private Mov movement;
+    private MarioAgent movement;
     public SpriteRenderer spriteRenderer { get; private set; }
     public Sprite idle;
     public Sprite jump;
@@ -12,7 +12,7 @@ public class PlayerSpriteRenderer : MonoBehaviour
 
     private void Awake()
     {
-        movement = GetComponentInParent<Mov>();
+        movement = GetComponentInParent<MarioAgent>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 

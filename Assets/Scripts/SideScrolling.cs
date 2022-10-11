@@ -20,7 +20,8 @@ public class SideScrolling : MonoBehaviour
     {
         // track the player moving to the right
         Vector3 cameraPosition = transform.position;
-        cameraPosition.x = Mathf.Max(cameraPosition.x, player.position.x);
+        //cameraPosition.x = Mathf.Max(cameraPosition.x, player.position.x);
+        cameraPosition.x = player.position.x;
         transform.position = cameraPosition;
     }
 

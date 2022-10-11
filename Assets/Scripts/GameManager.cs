@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         lives = 3;
         coins = 0;
 
-        LoadLevel(world, stage);
+        //LoadLevel(world, stage);
     }
 
     public void GameOver()
@@ -69,23 +69,6 @@ public class GameManager : MonoBehaviour
     public void NextLevel()
     {
         LoadLevel(world, stage + 1);
-    }
-
-    public void EndLevel()
-    {
-        print("Level finished");
-    }
-
-    public void WinLevel()
-    {
-        print("Level won!");
-        ResetLevel(2f);
-    }
-
-    public void LoseLevel()
-    {
-        print("Level lost!");
-        ResetLevel(2f);
     }
 
     public void ResetLevel(float delay)
