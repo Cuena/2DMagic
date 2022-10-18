@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public PlayerSpriteRenderer bigRenderer;
     private PlayerSpriteRenderer activeRenderer;
 
+    private MarioAgent agent;
     public CapsuleCollider2D capsuleCollider { get; private set; }
     public DeathAnimation deathAnimation { get; private set; }
 
@@ -18,6 +19,8 @@ public class Player : MonoBehaviour
     {
         capsuleCollider = GetComponent<CapsuleCollider2D>();
         deathAnimation = GetComponent<DeathAnimation>();
+        agent = GetComponent<MarioAgent>();
+
         activeRenderer = smallRenderer;
     }
 
@@ -40,11 +43,13 @@ public class Player : MonoBehaviour
 
     public void Death()
     {
-        smallRenderer.enabled = false;
-        bigRenderer.enabled = false;
-        deathAnimation.enabled = true;
+        //smallRenderer.enabled = false;
+        //bigRenderer.enabled = false;
+        //deathAnimation.enabled = true;
 
-        GameManager.Instance.ResetLevel(3f);
+        //GameManager.Instance.ResetLevel(3f);
+
+        agent.LoseLevel();
     }
 
 
@@ -53,17 +58,7 @@ public class Player : MonoBehaviour
         smallRenderer.enabled = false;
         bigRenderer.enabled = false;
     }
-    public void WinLevel()
-    {
-        FinishLevel();
-        GameManager.Instance.ResetLevel(2f);
-    }
 
-    public void LoseLevel()
-    {
-        FinishLevel();
-        GameManager.Instance.ResetLevel(2f);
-    }
 
     public void Grow()
     {

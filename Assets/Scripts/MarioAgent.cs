@@ -1,5 +1,6 @@
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -8,15 +9,16 @@ public class MarioAgent : Agent
     private new Camera camera;
     private new Rigidbody2D rigidbody;
     private new Collider2D collider;
+    
+
+    
+    public AgentSettings agentSettings;
 
     private Vector2 velocity;
     private float inputAxis;
 
-    public float moveSpeed = 8f;
-    public float maxJumpHeight = 5f;
-    public float maxJumpTime = 1f;
-    public float jumpForce => (2f * maxJumpHeight) / (maxJumpTime / 2f);
-    public float gravity => (-2f * maxJumpHeight) / Mathf.Pow(maxJumpTime / 2f, 2f);
+    public float jumpForce => (2f * agentSettings.maxJumpHeight) / (agentSettings.maxJumpTime / 2f);
+    public float gravity => (-2f * agentSettings.maxJumpHeight) / Mathf.Pow(agentSettings.maxJumpTime / 2f, 2f);
 
     public bool grounded { get; private set; }
     public bool jumping { get; private set; }
@@ -24,104 +26,79 @@ public class MarioAgent : Agent
     public bool sliding => (inputAxis > 0f && velocity.x < 0f) || (inputAxis < 0f && velocity.x > 0f);
     public bool falling => velocity.y < 0f && !grounded;
 
-    public float flagReward;
-    public float stepReward;
-    public float dieReward;
-
-    public Vector2 startingPos;
-
+    public float timeRemaining = 240;
+    public float timeReward = 240;
+   
     public override void Initialize()
     {
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
-
+         
         //m_SpawnAreaBounds = spawnArea.GetComponent<Collider>().bounds;
         //spawnArea.SetActive(false);
     }
 
-  
+    
+    public override void CollectObservations(VectorSensor sensor)
+    {
+         
+        // TODO: normalize positions
+        sensor.AddObservation(rigidbody.transform.position.x);
+        sensor.AddObservation(rigidbody.transform.position.y);
+
+        sensor.AddObservation(velocity);
+
+        sensor.AddObservation(grounded);
+        sensor.AddObservation(jumping);
+
+    }
 
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        var dojump = 0;
+       
         var movement = actionBuffers.DiscreteActions[0];
-        var jumping = actionBuffers.DiscreteActions[1];
+        var jp = actionBuffers.DiscreteActions[1];
         var direction = 0f;
 
-        switch (movement)
+        if (timeRemaining > 0)
         {
-            case 0:
-               break;
-            case 1:
-                direction = -1f;
-                AddReward(-1f);
-                break;
-            case 2:
-                direction = 1f;
-                AddReward(1f);
-                break;
+            timeRemaining -= Time.deltaTime;
+            AddReward(-0.0000000001f * (timeReward - timeRemaining));
 
-        }
-
-        if (jumping == 1)
-        {
-            AddReward(-1f);
-            dojump = 1;
         }
         else
         {
-            AddReward(1f);
-            dojump = 0;
+            //AddReward(-99999999999.0f * Mathf.Abs(rigidbody.position.x-GameObject.FindGameObjectWithTag("Win").transform.position.x) );
+            AddReward(-100.0f);
+            EndEpisode();
+            print("TERMINADO POR TIEMPO");
+            GameManager.Instance.ResetLevel(0f);
+            timeRemaining = 240;
+
         }
 
-        MoveAgent(direction, dojump);
-        
-    }
+        switch (movement)
+        {
+           
+            case 1:
+                direction = -1f;  
+                break;
+            case 2:
+                direction = 1f;
+                //AddReward(1f);
+                break;
 
-    public void Reset()
-    {
-        rigidbody.position = startingPos;
-        rigidbody.velocity = new Vector2(0f, 0f);
-        rigidbody.angularVelocity = 0f;
-    }
-    public override void OnEpisodeBegin()
-    {
-        print("Reset on EPISODE BEGIN");
-        Reset();
+        }
 
-    }
-
-    public void WinLevel()
-    {
-        print("EPISODE FINISHED");
-        AddReward(flagReward);
-        EndEpisode();
-        //GameManager.Instance.ResetLevel(1f);
-    }
-
-    public void LoseLevel()
-    {
-        print("EPISODE FINISHED");
-        AddReward(dieReward);
-        EndEpisode();
-        //GameManager.Instance.ResetLevel(1f);
-    }
-
-    // ---------------------------------------------------------------------------------------------------------------------------------------------------
-    // ----------------------------------------------------       MOVEMENT       -------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------------------------------------------------------------
-
-    public void MoveAgent(float direction, int dojump)
-    {
         HorizontalMovement(direction);
 
         grounded = rigidbody.Raycast(Vector2.down);
 
         if (grounded)
         {
-            GroundedMovement(dojump);
+            GroundedMovement(jp);
         }
 
         ApplyGravity();
@@ -137,14 +114,83 @@ public class MarioAgent : Agent
 
         rigidbody.MovePosition(position);
 
-        AddReward(stepReward / MaxStep);
+        AddReward(agentSettings.stepReward / MaxStep);
+
+    }
+
+   
+    public void Reset()
+    {
+        print("-----Reset-----");
+        print(agentSettings.startingPos);
+      
+        rigidbody.transform.position = agentSettings.startingPos;
+      
+        //rigidbody.velocity = new Vector2(0f, 0f);
+        velocity = new Vector2(0f, 0f);
+        //rigidbody.angularVelocity = 0f;
+    }
+    public override void OnEpisodeBegin()
+    {
+        print("Reset on EPISODE BEGIN");
+        Reset();
+
+    }
+
+    public void WinLevel()
+    {
+        print("EPISODE FINISHED");
+        AddReward(agentSettings.flagReward);
+        //AddReward(transform.position.x - agentSettings.startingPos.x);
+        EndEpisode();
+        GameManager.Instance.ResetLevel();
+    }
+
+    public void LoseLevel()
+    {
+        print("EPISODE FINISHED");
+        AddReward(agentSettings.dieReward);
+        AddReward(rigidbody.transform.position.x - agentSettings.startingPos.x);
+        EndEpisode();
+        //GameManager.Instance.ResetLevel(1f);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------------       MOVEMENT       -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------------------------------------------------
+
+    public void MoveAgent(float direction, int jp)
+    {
+        HorizontalMovement(direction);
+
+        grounded = rigidbody.Raycast(Vector2.down);
+
+        if (grounded)
+        {
+            GroundedMovement(jp);
+        }
+
+        ApplyGravity();
+
+        // move mario based on his velocity
+        Vector2 position = rigidbody.position;
+        position += velocity * Time.fixedDeltaTime;
+
+        //// clamp within the screen bounds
+        Vector2 leftEdge = camera.ScreenToWorldPoint(Vector2.zero);
+        Vector2 rightEdge = camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
+
+        rigidbody.MovePosition(position);
+
+        AddReward(agentSettings.stepReward / MaxStep);
     }
 
     private void HorizontalMovement(float inputAxis)
     {
         // accelerate / decelerate
         //inputAxis = Input.GetAxis("Horizontal");
-        velocity.x = Mathf.MoveTowards(velocity.x, inputAxis * moveSpeed, moveSpeed * Time.deltaTime);
+        velocity.x = Mathf.MoveTowards(velocity.x, inputAxis * agentSettings.moveSpeed, agentSettings.moveSpeed * Time.deltaTime);
 
         // check if running into a wall
         if (rigidbody.Raycast(Vector2.right * velocity.x))
@@ -164,6 +210,26 @@ public class MarioAgent : Agent
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            // bounce off enemy head
+            if (transform.DotTest(collision.transform, Vector2.down))
+            {
+                velocity.y = jumpForce / 2f;
+                jumping = true;
+            }
+        }
+        else if (collision.gameObject.layer != LayerMask.NameToLayer("PowerUp"))
+        {
+            // stop vertical movement if mario bonks his head
+            if (transform.DotTest(collision.transform, Vector2.up))
+            {
+                velocity.y = 0f;
+            }
+        }
+    }
 
     private void GroundedMovement(int jp)
     {
@@ -176,6 +242,7 @@ public class MarioAgent : Agent
         {
             velocity.y = jumpForce;
             jumping = true;
+            //AddReward(-100f);
         }
 
     }
@@ -207,7 +274,8 @@ public class MarioAgent : Agent
         {
             discreteActionsOut[0] = 2;
         }
-        else if (Input.GetKey(KeyCode.Space))
+        
+        if (Input.GetKey(KeyCode.Space))
         {
             discreteActionsOut[1] = 1;
         }

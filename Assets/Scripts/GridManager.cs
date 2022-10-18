@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
+using Random = System.Random;
+using System.Linq;
+using UnityEngine.XR;
+using UnityEngine.Tilemaps;
 
 public class GridManager : MonoBehaviour
 {
@@ -15,7 +20,7 @@ public class GridManager : MonoBehaviour
 
 
     public Sprite[] sprites;
-    public float[,] Grid;
+    public int[,] Grid;
     int Vertical, Horizontal;
 
 
@@ -25,7 +30,7 @@ public class GridManager : MonoBehaviour
     {
 
         print("grid");
-        Grid = new float[10, 25]   {{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
+        Grid = new int[10, 25]   {{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
@@ -38,33 +43,108 @@ public class GridManager : MonoBehaviour
 
 
 
-        Vertical = Grid.GetLength(0); // (int) Camera.main.orthographicSize;
-        Horizontal = Grid.GetLength(1); //Vertical * (int) Camera.main.aspect *2;
+        //Vertical = Grid.GetLength(0); // (int) Camera.main.orthographicSize;
+        //Horizontal = Grid.GetLength(1); //Vertical * (int) Camera.main.aspect *2;
         //Cols = Horizontal*4;
         //Rows = Vertical*4;
         //Grid = new float[Cols, Rows];
 
+        Grid = generateBaseMap(50);
+        
+        
         for (int i = 0; i < Grid.GetLength(0); i++)
         {
             for (int j = 0; j < Grid.GetLength(1); j++)
             {
-  
-
-
                     SpawnTile(j, -1*i, Grid[i, j]);
-                
-
             }
 
 
         }
+
     }
 
-
-    private Vector3 GridToWorldPosition(int x, int y )
+    public void insertRandomHoles(int[,] grid, int numHoles, int holeSize)
     {
-        return new Vector3(x - (Horizontal - 0.5f), y - (Vertical - 0.5f));
+        var rnd = new Random();
+
+
+        var w = grid.GetLength(1);
+
+        List<int> possible = Enumerable.Range(5, w - 10).ToList();
+
+        List<int> listNumbers = new List<int>();
+        for (int i = 0; i < numHoles; i++)
+        {
+            int index = rnd.Next(0, possible.Count);
+            listNumbers.Add(possible[index]);
+            possible.RemoveAt(index);
+        }
+
+        //print("Random holes in ");
+        //print(string.Join(";", listNumbers));
+
+        foreach (int j in listNumbers)
+        {
+            for (int x = 0; x < holeSize; x++)
+            {
+                var t = j;
+                Grid[8, t] = 1;
+                Grid[8, t + 1] = 1;
+                Grid[9, t] = 1;
+                Grid[9, t + 1] = 1;
+                t = t+1;
+            }
+
+           
+        }
     }
+
+    public int[,] generateBaseMap(int maxLength=50)
+    {
+        var rnd = new Random();
+
+        int w = rnd.Next(20, maxLength);
+
+        w = 50;
+
+        //w = Grid.GetLength(0);
+        //p = Grid.GetLength(1);
+
+        Grid = new int[10, w];
+
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < w; j++)
+            {
+                if (j == 0 || j == w - 1)
+                {
+                    Grid[i, j] = 0;
+                }
+                else if (i >= 10 - 2)
+                {
+                    Grid[i, j] = 0;
+                }
+                else
+                {
+                    Grid[i, j] = 1;
+                }
+            }
+        }
+
+        var p = rnd.Next(8, 48);
+        Grid[7, p] = 3;
+
+        return Grid;
+    }
+  
+
+
+    public Vector2 GridToWorldPosition(int x, int y )
+    {
+        return new Vector2(x - (Horizontal - 0.5f), y - (Vertical - 0.5f));
+    }
+
 
     private void SpawnTile(int x, int y, float value){
 
@@ -92,7 +172,7 @@ public class GridManager : MonoBehaviour
             SpriteRenderer sr = Instantiate(flag, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
             SpriteRenderer srb = Instantiate(back, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
 
-            sr.name = "Spikes X: " + x + "Y:" + y;
+            sr.name = "Win X: " + x + "Y:" + y;
             sr.sprite = sprites[(int)value];
             srb.sprite = sprites[1];
         } else
