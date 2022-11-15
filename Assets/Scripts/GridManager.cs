@@ -132,6 +132,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        insertRandomHoles(Grid, 3, 2);
         var p = rnd.Next(8, 48);
         Grid[7, p] = 3;
 

@@ -634,6 +634,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorName
       value: DungeonEscape
       objectReference: {fileID: 0}
@@ -664,7 +668,7 @@ PrefabInstance:
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: agentSettings
       value: 
-      objectReference: {fileID: 11400000, guid: c7831e7a5908f7c4f9f89c853e7a2243, type: 2}
+      objectReference: {fileID: 11400000, guid: 1de976bc72a0858469b618b6d918beba, type: 2}
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: startingPos.x
       value: -8.46
@@ -984,10 +988,6 @@ PrefabInstance:
     - target: {fileID: 9192701591911058503, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9192701591911058503, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
-      propertyPath: m_Material
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9192701591911058503, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_Offset.y

@@ -10,16 +10,11 @@ public class MarioAgent : Agent
     private new Rigidbody2D rigidbody;
     private new Collider2D collider;
     
-
-    
     public AgentSettings agentSettings;
-
     private Vector2 velocity;
     private float inputAxis;
-
     public float jumpForce => (2f * agentSettings.maxJumpHeight) / (agentSettings.maxJumpTime / 2f);
     public float gravity => (-2f * agentSettings.maxJumpHeight) / Mathf.Pow(agentSettings.maxJumpTime / 2f, 2f);
-
     public bool grounded { get; private set; }
     public bool jumping { get; private set; }
     public bool running => Mathf.Abs(velocity.x) > 0.25f || Mathf.Abs(inputAxis) > 0.25f;
@@ -34,11 +29,12 @@ public class MarioAgent : Agent
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
-         
+
         //m_SpawnAreaBounds = spawnArea.GetComponent<Collider>().bounds;
         //spawnArea.SetActive(false);
-    }
 
+        print(agentSettings);
+    }
     
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -51,13 +47,10 @@ public class MarioAgent : Agent
 
         sensor.AddObservation(grounded);
         sensor.AddObservation(jumping);
-
     }
-
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-       
         var movement = actionBuffers.DiscreteActions[0];
         var jp = actionBuffers.DiscreteActions[1];
         var direction = 0f;
@@ -65,12 +58,15 @@ public class MarioAgent : Agent
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
+
+            // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
             AddReward(-0.0000000001f * (timeReward - timeRemaining));
 
         }
         else
         {
             //AddReward(-99999999999.0f * Mathf.Abs(rigidbody.position.x-GameObject.FindGameObjectWithTag("Win").transform.position.x) );
+            // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
             AddReward(-100.0f);
             EndEpisode();
             print("TERMINADO POR TIEMPO");
@@ -83,11 +79,12 @@ public class MarioAgent : Agent
         {
            
             case 1:
-                direction = -1f;  
+                direction = -1f;
+                AddReward(-1f);
                 break;
             case 2:
                 direction = 1f;
-                //AddReward(1f);
+                AddReward(1f);
                 break;
 
         }
@@ -114,7 +111,10 @@ public class MarioAgent : Agent
 
         rigidbody.MovePosition(position);
 
+        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
+
         AddReward(agentSettings.stepReward / MaxStep);
+
 
     }
 
@@ -140,8 +140,9 @@ public class MarioAgent : Agent
     public void WinLevel()
     {
         print("EPISODE FINISHED");
+        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
         AddReward(agentSettings.flagReward);
-        //AddReward(transform.position.x - agentSettings.startingPos.x);
+        AddReward(transform.position.x - agentSettings.startingPos.x);
         EndEpisode();
         GameManager.Instance.ResetLevel();
     }
@@ -149,6 +150,7 @@ public class MarioAgent : Agent
     public void LoseLevel()
     {
         print("EPISODE FINISHED");
+        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
         AddReward(agentSettings.dieReward);
         AddReward(rigidbody.transform.position.x - agentSettings.startingPos.x);
         EndEpisode();
@@ -159,32 +161,7 @@ public class MarioAgent : Agent
     // ----------------------------------------------------       MOVEMENT       -------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
 
-    public void MoveAgent(float direction, int jp)
-    {
-        HorizontalMovement(direction);
 
-        grounded = rigidbody.Raycast(Vector2.down);
-
-        if (grounded)
-        {
-            GroundedMovement(jp);
-        }
-
-        ApplyGravity();
-
-        // move mario based on his velocity
-        Vector2 position = rigidbody.position;
-        position += velocity * Time.fixedDeltaTime;
-
-        //// clamp within the screen bounds
-        Vector2 leftEdge = camera.ScreenToWorldPoint(Vector2.zero);
-        Vector2 rightEdge = camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-        position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
-
-        rigidbody.MovePosition(position);
-
-        AddReward(agentSettings.stepReward / MaxStep);
-    }
 
     private void HorizontalMovement(float inputAxis)
     {
@@ -207,27 +184,6 @@ public class MarioAgent : Agent
         {
             transform.eulerAngles = new Vector3(0f, 180f, 0f);
 
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-        {
-            // bounce off enemy head
-            if (transform.DotTest(collision.transform, Vector2.down))
-            {
-                velocity.y = jumpForce / 2f;
-                jumping = true;
-            }
-        }
-        else if (collision.gameObject.layer != LayerMask.NameToLayer("PowerUp"))
-        {
-            // stop vertical movement if mario bonks his head
-            if (transform.DotTest(collision.transform, Vector2.up))
-            {
-                velocity.y = 0f;
-            }
         }
     }
 
@@ -282,6 +238,28 @@ public class MarioAgent : Agent
     }
 
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            // bounce off enemy head
+            if (transform.DotTest(collision.transform, Vector2.down))
+            {
+                velocity.y = jumpForce / 2f;
+                jumping = true;
+            }
+        }
+        else if (collision.gameObject.layer != LayerMask.NameToLayer("PowerUp"))
+        {
+            // stop vertical movement if mario bonks his head
+            if (transform.DotTest(collision.transform, Vector2.up))
+            {
+                velocity.y = 0f;
+            }
+        }
+    }
+
+
     /// <summary>
     /// In the editor, if "Reset On Done" is checked then AgentReset() will be
     /// called automatically anytime we mark done = true in an agent script.
@@ -301,5 +279,30 @@ public class MarioAgent : Agent
     //    return randomSpawnPos;
     //}
 
+    public void MoveAgent(float direction, int jp)
+    {
+        HorizontalMovement(direction);
 
+        grounded = rigidbody.Raycast(Vector2.down);
+
+        if (grounded)
+        {
+            GroundedMovement(jp);
+        }
+
+        ApplyGravity();
+
+        // move mario based on his velocity
+        Vector2 position = rigidbody.position;
+        position += velocity * Time.fixedDeltaTime;
+
+        //// clamp within the screen bounds
+        Vector2 leftEdge = camera.ScreenToWorldPoint(Vector2.zero);
+        Vector2 rightEdge = camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
+        position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
+
+        rigidbody.MovePosition(position);
+
+        AddReward(agentSettings.stepReward / MaxStep);
+    }
 }
