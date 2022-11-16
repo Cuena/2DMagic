@@ -23,7 +23,11 @@ public class MarioAgent : Agent
 
     public float timeRemaining = 240;
     public float timeReward = 240;
-   
+
+
+    public GeneratorAgent gen;
+
+
     public override void Initialize()
     {
         camera = Camera.main;
@@ -68,7 +72,7 @@ public class MarioAgent : Agent
             //AddReward(-99999999999.0f * Mathf.Abs(rigidbody.position.x-GameObject.FindGameObjectWithTag("Win").transform.position.x) );
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
             AddReward(-100.0f);
-            EndEpisode();
+            Finish();
             print("TERMINADO POR TIEMPO");
             GameManager.Instance.ResetLevel(0f);
             timeRemaining = 240;
@@ -137,13 +141,20 @@ public class MarioAgent : Agent
 
     }
 
+
+    public void Finish()
+    {
+        EndEpisode();
+        gen.EndEpisode();
+    }
+
     public void WinLevel()
     {
         print("EPISODE FINISHED");
         // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
         AddReward(agentSettings.flagReward);
         AddReward(transform.position.x - agentSettings.startingPos.x);
-        EndEpisode();
+        Finish();
         GameManager.Instance.ResetLevel();
     }
 
@@ -153,7 +164,7 @@ public class MarioAgent : Agent
         // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
         AddReward(agentSettings.dieReward);
         AddReward(rigidbody.transform.position.x - agentSettings.startingPos.x);
-        EndEpisode();
+        Finish();
         //GameManager.Instance.ResetLevel(1f);
     }
 

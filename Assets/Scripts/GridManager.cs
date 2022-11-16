@@ -49,20 +49,35 @@ public class GridManager : MonoBehaviour
         //Rows = Vertical*4;
         //Grid = new float[Cols, Rows];
 
-        Grid = generateBaseMap(50);
+        //Grid = generateBaseMap(50);
         
         
-        for (int i = 0; i < Grid.GetLength(0); i++)
-        {
-            for (int j = 0; j < Grid.GetLength(1); j++)
-            {
-                    SpawnTile(j, -1*i, Grid[i, j]);
-            }
+        //for (int i = 0; i < Grid.GetLength(0); i++)
+        //{
+        //    for (int j = 0; j < Grid.GetLength(1); j++)
+        //    {
+        //            SpawnTile(j, -1*i, Grid[i, j]);
+        //    }
 
 
-        }
+        //}
 
     }
+
+
+
+
+    public void insertVector(int[,] grid, int[] rv)
+    {
+        for (int i = 0; i < grid.GetLength(1); i++)
+        {
+            grid[9, i] =  rv[i];
+        }
+    }
+
+
+
+
 
     public void insertRandomHoles(int[,] grid, int numHoles, int holeSize)
     {
@@ -100,7 +115,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public int[,] generateBaseMap(int maxLength=50)
+    public int[,] generateBaseMap(int maxLength, int[] rv)
     {
         var rnd = new Random();
 
@@ -123,7 +138,7 @@ public class GridManager : MonoBehaviour
                 }
                 else if (i >= 10 - 2)
                 {
-                    Grid[i, j] = 0;
+                    Grid[i, j] = 1;
                 }
                 else
                 {
@@ -132,9 +147,32 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        insertRandomHoles(Grid, 3, 2);
+        //insertRandomHoles(Grid, 3, 2);
+        insertVector(Grid, rv);
+
         var p = rnd.Next(8, 48);
-        Grid[7, p] = 3;
+        Grid[8, w-2] = 3;
+        var c = 0;
+        for (int i = 0; i < w; i++)
+        {
+            //print(Grid[8, i]);
+
+            if (Grid[8, i] == 3)
+            {
+                c++;
+            }
+        }
+        print("JOder: "+c);
+
+        for (int i = 0; i < Grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < Grid.GetLength(1); j++)
+            {
+                    SpawnTile(j, -1*i, Grid[i, j]);
+            }
+
+
+        }
 
         return Grid;
     }
