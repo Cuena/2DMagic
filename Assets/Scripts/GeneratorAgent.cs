@@ -6,6 +6,9 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 using System;
 
+using System.Threading;
+using Unity.VisualScripting;
+
 public class GeneratorAgent : Agent
 {
 
@@ -14,19 +17,23 @@ public class GeneratorAgent : Agent
     public MarioAgent marioAgent;
 
     private DecisionRequester dr;
+
+    private int marioDecisionRequesterPeriod;
+    private bool marioDecisionRequesterActionsBetweenDecisions;
+
     // Start is called before the first frame update
     public override void Initialize()
     {
         dr = marioAgent.GetComponent<DecisionRequester>();
         print("INICIALIZANDO GENERATOR AGENT");
-
-
+        marioDecisionRequesterPeriod = dr.DecisionPeriod;
+        marioDecisionRequesterActionsBetweenDecisions = dr.TakeActionsBetweenDecisions;
     }
 
     public override void OnEpisodeBegin()
     {
         print("GENERATOR EPISODE BEGIN");
-        dr.enabled = false;
+        freezeMario();
         Reset();
         RequestDecision();
 
@@ -77,8 +84,7 @@ public class GeneratorAgent : Agent
 
         gridManager.generateBaseMap(50, values);
 
-        dr.enabled = true;
-
+        unfreezeMario();
     }
 
     private float CheckConstraints(int[] values) 
@@ -148,10 +154,7 @@ public class GeneratorAgent : Agent
         return 1.0f;
     }
 
-    public void Reset()
-    {
-
-    }
+    public void Reset() { }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
@@ -171,7 +174,20 @@ public class GeneratorAgent : Agent
         //dr.enabled = true;
     }
 
+    private void freezeMario()
+    {
+        // stop mario from requesting decisions
+        dr = marioAgent.GetComponent<DecisionRequester>();
+        Destroy(dr);
+    }
 
+    private void unfreezeMario()
+    {
+        // make mario go back to request decisions
+        dr = marioAgent.AddComponent<DecisionRequester>();
+        dr.DecisionPeriod = marioDecisionRequesterPeriod;
+        dr.TakeActionsBetweenDecisions = marioDecisionRequesterActionsBetweenDecisions;
+    }
 
 
     // Update is called once per frame
