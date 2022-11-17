@@ -13,7 +13,7 @@ public class DeathBarrier : MonoBehaviour
             //GameManager.Instance.ResetLevel(3f);
             agent.LoseLevel();
             var peach = GameObject.FindWithTag("Win");
-            Destroy(peach);
+            //Destroy(peach);
 
 
         }

@@ -69,10 +69,28 @@ public class GridManager : MonoBehaviour
 
     public void insertVector(int[,] grid, int[] rv)
     {
-        for (int i = 0; i < grid.GetLength(1); i++)
+        Debug.Log("*** = " + String.Join("",
+             new List<int>(rv)
+             .ConvertAll(i => i.ToString())
+             .ToArray()));
+        for (int i = 0; i < 50; i++)
         {
-            grid[9, i] =  rv[i];
+            grid[9, i] = 0;
+            
         }
+
+
+        for (int j = 0; j < 10; j++)
+        {
+            grid[9, rv[j]] = 1;
+        }
+
+
+        for (int i = 0; i < 7; i++)
+        {
+            grid[9, i] = 0;
+        }
+
     }
 
 

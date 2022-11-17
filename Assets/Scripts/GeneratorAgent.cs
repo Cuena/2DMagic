@@ -36,9 +36,9 @@ public class GeneratorAgent : Agent
     {
         print("COLLECTEANDO OBSERVATIONS");
         System.Random random = new System.Random();
-        float[] values = new float[50];
+        float[] values = new float[43];
 
-        for (int i = 0; i < 50; ++i) 
+        for (int i = 0; i < 10; ++i) 
         { 
             values[i] = (float)random.Next();
             sensor.AddObservation(values[i]);
@@ -54,8 +54,8 @@ public class GeneratorAgent : Agent
 
         var discreteActions = actionBuffers.DiscreteActions;
 
-        int[] values = new int[50];
-        for (int i = 0; i < 50; ++i)
+        int[] values = new int[10];
+        for (int i = 0; i < 10; ++i)
         {
             values[i] = discreteActions[i];
         }
@@ -87,7 +87,7 @@ public class GeneratorAgent : Agent
         float penalty = 0.0f;
 
         // C1: 1-4 & -1 deben ser suelo
-        penalty += CheckConstraint1(values);
+        //penalty += CheckConstraint1(values);
 
         // C2: que no haya x huecos consecutivos
         penalty += CheckConstraint2(values);
@@ -97,7 +97,7 @@ public class GeneratorAgent : Agent
 
     private float CheckConstraint1(int[] values)
     {
-        int[] n = new int[] { 0, 1, 2, 3, 50 - 1 };
+        int[] n = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 50 - 1 };
         var pass = true;
         for (int i = 0; i < n.Length; ++i)
         {

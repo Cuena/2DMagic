@@ -24,6 +24,8 @@ public class MarioAgent : Agent
     public float timeRemaining = 240;
     public float timeReward = 240;
 
+    private bool fail = false;
+
 
     public GeneratorAgent gen;
 
@@ -154,10 +156,10 @@ public class MarioAgent : Agent
         // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
         AddReward(agentSettings.flagReward);
         AddReward(transform.position.x - agentSettings.startingPos.x);
-
+        print("===HA GANADO");
         // reward al generador
         gen.AddReward(-50f);
-
+        //fail = false;
         Finish();
         GameManager.Instance.ResetLevel();
     }
@@ -170,10 +172,17 @@ public class MarioAgent : Agent
         AddReward(rigidbody.transform.position.x - agentSettings.startingPos.x);
 
         // reward al generador
+        //if (!fail)
+        //{
+        //    gen.AddReward(50f);
+        //    fail = true;
+        //}
         gen.AddReward(50f);
 
         Finish();
-        //GameManager.Instance.ResetLevel(1f);
+
+        Reset();
+        GameManager.Instance.ResetLevel(1f);
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
