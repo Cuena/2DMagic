@@ -721,7 +721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorName
-      value: DungeonEscape
+      value: MarioBehaviour
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
