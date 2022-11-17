@@ -97,7 +97,7 @@ public class GeneratorAgent : Agent
 
     private float CheckConstraint1(int[] values)
     {
-        int[] n = new int[] { 0, 1, 2, 3, 50 - 1 };
+        int[] n = new int[] { 0, 1, 2, 3, 50 - 1, 50 - 2 };
         var pass = true;
         for (int i = 0; i < n.Length; ++i)
         {
