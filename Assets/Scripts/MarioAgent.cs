@@ -198,7 +198,8 @@ public class MarioAgent : Agent
     {
         // accelerate / decelerate
         //inputAxis = Input.GetAxis("Horizontal");
-        velocity.x = Mathf.MoveTowards(velocity.x, inputAxis * agentSettings.moveSpeed, agentSettings.moveSpeed * Time.deltaTime);
+        // velocity.x = Mathf.MoveTowards(velocity.x, inputAxis * agentSettings.moveSpeed, agentSettings.moveSpeed * Time.deltaTime);
+        velocity.x = inputAxis * agentSettings.moveSpeed;
 
         // check if running into a wall
         if (rigidbody.Raycast(Vector2.right * velocity.x))
