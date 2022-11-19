@@ -14,6 +14,8 @@ public class AgentSettings : ScriptableObject
     public float flagReward;
     public float stepReward;
     public float dieReward;
+    public float deathByTimeoutReward;
+    public float jumpReward;
 
     public Vector2 startingPos = new Vector2(0f, 0f);
 

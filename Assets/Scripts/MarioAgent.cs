@@ -29,7 +29,7 @@ public class MarioAgent : Agent
 
     public GeneratorAgent gen;
 
-
+    private int curriculum_stage = 3;
     public override void Initialize()
     {
         camera = Camera.main;
@@ -73,7 +73,7 @@ public class MarioAgent : Agent
         {
             //AddReward(-99999999999.0f * Mathf.Abs(rigidbody.position.x-GameObject.FindGameObjectWithTag("Win").transform.position.x) );
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-            AddReward(-100.0f);
+            AddReward(agentSettings.deathByTimeoutReward);
             Finish();
             print("TERMINADO POR TIEMPO");
             GameManager.Instance.ResetLevel(0f);
@@ -86,11 +86,14 @@ public class MarioAgent : Agent
            
             case 1:
                 direction = -1f;
-                AddReward(-1f);
+                //AddReward(-1f);
                 break;
             case 2:
                 direction = 1f;
-                AddReward(1f);
+                if (curriculum_stage == 0)
+                {
+                    AddReward(1f);
+                }
                 break;
 
         }
@@ -139,6 +142,9 @@ public class MarioAgent : Agent
     public override void OnEpisodeBegin()
     {
         print("Reset on EPISODE BEGIN");
+
+        curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("mario_learning", 3.0f);
+
         Reset();
 
     }
@@ -230,7 +236,7 @@ public class MarioAgent : Agent
         {
             velocity.y = jumpForce;
             jumping = true;
-            //AddReward(-100f);
+            AddReward(agentSettings.jumpReward);
         }
 
     }

@@ -52,3 +52,43 @@ behaviors:
     max_steps: 200000
     time_horizon: 64
     summary_freq: 1000
+
+
+environment_parameters:
+  mario_learning:
+    curriculum:
+      - name: NoHoles # The '-' is important as this is a list
+        completion_criteria:
+          measure: reward
+          behavior: MarioBehaviour
+          signal_smoothing: true
+          min_lesson_length: 5
+          threshold: 95.0
+        value: 0
+      - name:  OneHole # This is the start of the second lesson
+        completion_criteria:
+          measure: reward
+          behavior: MarioBehaviour
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 95.0
+          require_reset: true
+        value: 1
+      - name: TwoHoles
+        completion_criteria:
+          measure: reward
+          behavior: MarioBehaviour
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 95.0
+          require_reset: true
+        value: 2
+      - name: ThreeHoles
+        completion_criteria:
+          measure: reward
+          behavior: MarioBehaviour
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 95.0
+          require_reset: true
+        value: 2

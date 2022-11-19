@@ -5,6 +5,7 @@ using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
 using System;
+using Random = System.Random;
 
 using System.Threading;
 using Unity.VisualScripting;
@@ -21,6 +22,8 @@ public class GeneratorAgent : Agent
     private int marioDecisionRequesterPeriod;
     private bool marioDecisionRequesterActionsBetweenDecisions;
 
+    private int curriculum_stage = 3;
+
     // Start is called before the first frame update
     public override void Initialize()
     {
@@ -33,6 +36,7 @@ public class GeneratorAgent : Agent
     public override void OnEpisodeBegin()
     {
         print("GENERATOR EPISODE BEGIN");
+        curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("mario_learning", 3.0f);
         freezeMario();
         Reset();
         RequestDecision();
@@ -61,8 +65,9 @@ public class GeneratorAgent : Agent
 
         var discreteActions = actionBuffers.DiscreteActions;
 
-        int[] values = new int[10];
-        for (int i = 0; i < 10; ++i)
+        int numHoleIdx = discreteActions.Length;
+        int[] values = new int[numHoleIdx];
+        for (int i = 0; i < numHoleIdx; ++i)
         {
             values[i] = discreteActions[i];
         }
@@ -106,7 +111,7 @@ public class GeneratorAgent : Agent
         //penalty += CheckConstraint1(values);
 
         // C2: que no haya x huecos consecutivos
-        penalty += CheckConstraint2(values);
+        //penalty += CheckConstraint2(values);
 
         return -penalty * 100;
     }
@@ -173,12 +178,48 @@ public class GeneratorAgent : Agent
 
         var discreteActionsOut = actionsOut.DiscreteActions;
 
-        for (int i = 0; i < 10; ++i)
+        for (int i = 0; i < discreteActionsOut.Length; ++i)
         {
             discreteActionsOut[i] = 0;
         }
 
-        discreteActionsOut[7] = 1;
+        int maxNumHoles = 5;
+
+        int maxHoleSize = curriculum_stage;
+
+        int lastHoleStartIdx = -1;
+        bool inHole = false;
+        Random random = new Random();
+
+        int numAddedHoles = 0;
+
+        print("generating the new holes");
+        for (int i = 7; i < 50 - 3; ++i)
+        {
+            if (maxHoleSize == 0) break;
+            bool addHole = random.Next(0, 2) == 1;
+            if (addHole && (!inHole || i - lastHoleStartIdx < maxHoleSize))
+            {
+                //discreteActionsOut[i] = 1;  // insert hole
+                discreteActionsOut[numAddedHoles] = i;
+                numAddedHoles++;
+                if (!inHole)
+                {
+                    inHole = true;
+                    lastHoleStartIdx = i;
+                }
+                print("adding a hole");
+                continue;
+            }
+
+            inHole = false;
+            if (numAddedHoles >= actionsOut.DiscreteActions.Length)
+            {
+                break;
+            }
+        }
+
+        //discreteActionsOut[7] = 1;
         //gridManager.generateBaseMap(50, values);
 
         //dr.enabled = true;
