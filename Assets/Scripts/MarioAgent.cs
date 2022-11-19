@@ -9,9 +9,11 @@ public class MarioAgent : Agent
     private new Camera camera;
     private new Rigidbody2D rigidbody;
     private new Collider2D collider;
+
+    private int remainingJumps = 5;
     
     public AgentSettings agentSettings;
-    private Vector2 velocity;
+    public Vector2 velocity;
     private float inputAxis;
     public float jumpForce => (2f * agentSettings.maxJumpHeight) / (agentSettings.maxJumpTime / 2f);
     public float gravity => (-2f * agentSettings.maxJumpHeight) / Mathf.Pow(agentSettings.maxJumpTime / 2f, 2f);
@@ -53,6 +55,7 @@ public class MarioAgent : Agent
 
         sensor.AddObservation(grounded);
         sensor.AddObservation(jumping);
+        sensor.AddObservation(remainingJumps);
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -73,10 +76,12 @@ public class MarioAgent : Agent
         {
             //AddReward(-99999999999.0f * Mathf.Abs(rigidbody.position.x-GameObject.FindGameObjectWithTag("Win").transform.position.x) );
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-            AddReward(-100.0f);
+            AddReward(-1000000.0f);
             Finish();
+            DestroyAll();
+            Reset();
+            GameManager.Instance.ResetLevel();
             print("TERMINADO POR TIEMPO");
-            GameManager.Instance.ResetLevel(0f);
             timeRemaining = 240;
 
         }
@@ -86,14 +91,15 @@ public class MarioAgent : Agent
            
             case 1:
                 direction = -1f;
-                AddReward(-1f);
+                AddReward(-20f);
                 break;
             case 2:
                 direction = 1f;
-                AddReward(1f);
+                //AddReward(1f);
                 break;
 
         }
+        direction = 1f;
 
         HorizontalMovement(direction);
 
@@ -135,6 +141,8 @@ public class MarioAgent : Agent
         //rigidbody.velocity = new Vector2(0f, 0f);
         velocity = new Vector2(0f, 0f);
         //rigidbody.angularVelocity = 0f;
+
+        remainingJumps = 5;
     }
     public override void OnEpisodeBegin()
     {
@@ -161,6 +169,8 @@ public class MarioAgent : Agent
         gen.AddReward(-50f);
         //fail = false;
         Finish();
+        DestroyAll();
+        Reset();
         GameManager.Instance.ResetLevel();
     }
 
@@ -169,7 +179,7 @@ public class MarioAgent : Agent
         print("EPISODE FINISHED");
         // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
         AddReward(agentSettings.dieReward);
-        AddReward(rigidbody.transform.position.x - agentSettings.startingPos.x);
+        AddReward(50*(rigidbody.transform.position.x - agentSettings.startingPos.x));
 
         // reward al generador
         //if (!fail)
@@ -180,9 +190,31 @@ public class MarioAgent : Agent
         gen.AddReward(50f);
 
         Finish();
-
+        DestroyAll();
         Reset();
-        GameManager.Instance.ResetLevel(1f);
+        GameManager.Instance.ResetLevel();
+    }
+    
+    private void DestroyAll()
+    {
+        GameObject[] terr = GameObject.FindGameObjectsWithTag("terrain");
+        foreach (GameObject t in terr)
+        {
+            GameObject.Destroy(t);
+        }
+
+        GameObject[] spikes = GameObject.FindGameObjectsWithTag("Lose");
+        foreach (GameObject s in spikes)
+        {
+            GameObject.Destroy(s);
+        }
+        
+        GameObject[] magicDoors = GameObject.FindGameObjectsWithTag("SkyBar");
+        foreach (GameObject s in magicDoors)
+        {
+            GameObject.Destroy(s);
+        }
+
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -225,9 +257,13 @@ public class MarioAgent : Agent
         // perform jump
         if (jp == 1)
         {
-            velocity.y = jumpForce;
-            jumping = true;
-            //AddReward(-100f);
+            if (remainingJumps > 0)
+            {
+                velocity.y = jumpForce;
+                jumping = true;
+                AddReward(-1f);
+                remainingJumps -= 1;
+            }
         }
 
     }

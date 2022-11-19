@@ -80,16 +80,18 @@ public class GridManager : MonoBehaviour
         }
 
 
-        for (int j = 0; j < 10; j++)
+        for (int j = 0; j < rv.GetLength(0); j++)
         {
-            grid[9, rv[j]] = 1;
-        }
+            
+            for (int i = 0; i < 10; i++)
+            {
+                grid[i, rv[j] + 7] = 4;
+            }
+            grid[9, rv[j]+7] = 2;
 
-
-        for (int i = 0; i < 7; i++)
-        {
-            grid[9, i] = 0;
+            
         }
+        
 
     }
 
@@ -133,8 +135,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public int[,] generateBaseMap(int maxLength, int[] rv)
+    public int[] generateBaseMap(int maxLength, int[] rv)
     {
+        
         var rnd = new Random();
 
         int w = rnd.Next(20, maxLength);
@@ -150,7 +153,11 @@ public class GridManager : MonoBehaviour
         {
             for (int j = 0; j < w; j++)
             {
-                if (j == 0 || j == w - 1)
+                if (j == 0)
+                {
+                    Grid[i, j] = 2;
+                }
+                else if (j == w - 1)
                 {
                     Grid[i, j] = 0;
                 }
@@ -186,13 +193,17 @@ public class GridManager : MonoBehaviour
         {
             for (int j = 0; j < Grid.GetLength(1); j++)
             {
-                    SpawnTile(j, -1*i, Grid[i, j]);
+                SpawnTile(j, -1*i, Grid[i, j]);
             }
-
-
         }
 
-        return Grid;
+        int[] newValues = new int[w];
+        for (int i = 0; i < w; i++)
+        {
+            newValues[i] = Grid[9, i];
+        }
+
+        return newValues;
     }
   
 

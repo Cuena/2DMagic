@@ -14,6 +14,9 @@ public class GeneratorAgent : Agent
     public MarioAgent marioAgent;
 
     private DecisionRequester dr;
+
+    private int maxHoles = 2;
+
     // Start is called before the first frame update
     public override void Initialize()
     {
@@ -36,9 +39,9 @@ public class GeneratorAgent : Agent
     {
         print("COLLECTEANDO OBSERVATIONS");
         System.Random random = new System.Random();
-        float[] values = new float[43];
+        float[] values = new float[maxHoles];
 
-        for (int i = 0; i < 10; ++i) 
+        for (int i = 0; i < maxHoles; ++i) 
         { 
             values[i] = (float)random.Next();
             sensor.AddObservation(values[i]);
@@ -51,18 +54,23 @@ public class GeneratorAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-
         var discreteActions = actionBuffers.DiscreteActions;
 
-        int[] values = new int[10];
-        for (int i = 0; i < 10; ++i)
+        int[] values = new int[maxHoles];
+        for (int i = 0; i < maxHoles; ++i)
         {
             values[i] = discreteActions[i];
+            print("#-#" + values[i]);
         }
-
-        // chequear las constraints 
-        float penalty = CheckConstraints(values);
         
+        print("=== SI QUE PASA LAS CONSTRAINTS");
+
+        int[] newValues = gridManager.generateBaseMap(50, values);
+
+        
+        // chequear las constraints 
+        float penalty = CheckConstraints(newValues);
+        penalty = 0.0f;
         AddReward(penalty);
 
         if (penalty < 0.0f)
@@ -72,11 +80,7 @@ public class GeneratorAgent : Agent
             EndEpisode();
             return;
         }
-
-        print("=== SI QUE PASA LAS CONSTRAINTS");
-
-        gridManager.generateBaseMap(50, values);
-
+        
         dr.enabled = true;
 
     }
@@ -90,7 +94,7 @@ public class GeneratorAgent : Agent
         //penalty += CheckConstraint1(values);
 
         // C2: que no haya x huecos consecutivos
-        penalty += CheckConstraint2(values);
+        penalty += CheckConstraint2(values, 6);
 
         return -penalty * 100;
     }
@@ -160,12 +164,12 @@ public class GeneratorAgent : Agent
 
         var discreteActionsOut = actionsOut.DiscreteActions;
 
-        for (int i = 0; i < 50; ++i)
+        for (int i = 0; i < 10; ++i)
         {
-            discreteActionsOut[i] = 0;
+            discreteActionsOut[i] = 49;
         }
 
-        discreteActionsOut[7] = 1;
+        //discreteActionsOut[7] = 1;
         //gridManager.generateBaseMap(50, values);
 
         //dr.enabled = true;

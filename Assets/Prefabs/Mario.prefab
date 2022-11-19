@@ -425,8 +425,10 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 5000
   agentSettings: {fileID: 11400000, guid: c7831e7a5908f7c4f9f89c853e7a2243, type: 2}
+  velocity: {x: 0, y: 0}
   timeRemaining: 240
   timeReward: 240
+  gen: {fileID: 0}
 --- !u!114 &1077877509006983521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,9 +451,9 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 71fcf6e3a114b35468fc7293fd40a693, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: DungeonEscape
   TeamId: 0
   m_UseChildSensors: 1

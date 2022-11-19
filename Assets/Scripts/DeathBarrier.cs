@@ -1,3 +1,4 @@
+using System;
 using Unity.MLAgents;
 using UnityEngine;
 
@@ -23,4 +24,8 @@ public class DeathBarrier : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        agent = GameObject.FindWithTag("Player").GetComponent<MarioAgent>();
+    }
 }

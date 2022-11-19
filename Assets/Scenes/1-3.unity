@@ -216,7 +216,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7
+  orthographic size: 20.698826
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -433,8 +433,8 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 0200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000
-    VectorActionSize: 0200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000020000000200000002000000
+      BranchSizes: 2b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b000000
+    VectorActionSize: 2b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
@@ -445,6 +445,7 @@ MonoBehaviour:
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
+  m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
 --- !u!4 &1331134227
 Transform:
@@ -540,7 +541,7 @@ MonoBehaviour:
   back: {fileID: 193710054504683462, guid: 1d354160329079443ab49dd872e1f2d8, type: 3}
   spike: {fileID: 193710054504683462, guid: 1ae7ad2d46ced2a46888f4de68874c6b, type: 3}
   flag: {fileID: 193710054504683462, guid: 31df70cedb88af24eb7fb31c89a8eee9, type: 3}
-  bsky: {fileID: 193710054504683462, guid: 3b52d59cb91ce3d469b19592e3e2e5ff, type: 3}
+  bsky: {fileID: 193710054504683462, guid: 67e26acaf5f1a1745a40f0dbdc7622b3, type: 3}
   sprites:
   - {fileID: 21300134, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
   - {fileID: 21300290, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
@@ -728,7 +729,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.NumStackedVectorObservations
@@ -973,6 +974,46 @@ PrefabInstance:
     - target: {fileID: 6738933434029297075, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.m_ActionSpec.BranchSizes.Array.data[20]
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6977563471448473721, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.55607057
+      objectReference: {fileID: 0}
+    - target: {fileID: 6977563471448473721, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6977563471448473721, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6977563471448473721, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.83113515
+      objectReference: {fileID: 0}
+    - target: {fileID: 6977563471448473721, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -112.431
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_MaxRayDegrees
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_RaysPerDirection
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_SphereCastRadius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_DetectableTags.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_DetectableTags.Array.data[3]
+      value: SkyBar
       objectReference: {fileID: 0}
     - target: {fileID: 8437365640245717202, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_LocalPosition.y
