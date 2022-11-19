@@ -6,6 +6,9 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 using System;
 
+using System.Threading;
+using Unity.VisualScripting;
+
 public class GeneratorAgent : Agent
 {
 
@@ -14,19 +17,23 @@ public class GeneratorAgent : Agent
     public MarioAgent marioAgent;
 
     private DecisionRequester dr;
+
+    private int marioDecisionRequesterPeriod;
+    private bool marioDecisionRequesterActionsBetweenDecisions;
+
     // Start is called before the first frame update
     public override void Initialize()
     {
         dr = marioAgent.GetComponent<DecisionRequester>();
         print("INICIALIZANDO GENERATOR AGENT");
-
-
+        marioDecisionRequesterPeriod = dr.DecisionPeriod;
+        marioDecisionRequesterActionsBetweenDecisions = dr.TakeActionsBetweenDecisions;
     }
 
     public override void OnEpisodeBegin()
     {
         print("GENERATOR EPISODE BEGIN");
-        dr.enabled = false;
+        freezeMario();
         Reset();
         RequestDecision();
 
@@ -36,7 +43,7 @@ public class GeneratorAgent : Agent
     {
         print("COLLECTEANDO OBSERVATIONS");
         System.Random random = new System.Random();
-        float[] values = new float[43];
+        float[] values = new float[10];
 
         for (int i = 0; i < 10; ++i) 
         { 
@@ -60,8 +67,19 @@ public class GeneratorAgent : Agent
             values[i] = discreteActions[i];
         }
 
+
+        var ret = gridManager.generateBaseMap(50, values);
+
+
+        Debug.Log("+++*** = " + String.Join("",
+         new List<int>(ret)
+         .ConvertAll(i => i.ToString())
+         .ToArray()));
+    
+            
+
         // chequear las constraints 
-        float penalty = CheckConstraints(values);
+        float penalty = CheckConstraints(ret);
         
         AddReward(penalty);
 
@@ -75,10 +93,8 @@ public class GeneratorAgent : Agent
 
         print("=== SI QUE PASA LAS CONSTRAINTS");
 
-        gridManager.generateBaseMap(50, values);
 
-        dr.enabled = true;
-
+        unfreezeMario();
     }
 
     private float CheckConstraints(int[] values) 
@@ -97,7 +113,7 @@ public class GeneratorAgent : Agent
 
     private float CheckConstraint1(int[] values)
     {
-        int[] n = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 50 - 1 };
+        int[] n = new int[] { 0, 1, 2, 3, 50 - 1 };
         var pass = true;
         for (int i = 0; i < n.Length; ++i)
         {
@@ -148,10 +164,7 @@ public class GeneratorAgent : Agent
         return 1.0f;
     }
 
-    public void Reset()
-    {
-
-    }
+    public void Reset() { }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
@@ -160,7 +173,7 @@ public class GeneratorAgent : Agent
 
         var discreteActionsOut = actionsOut.DiscreteActions;
 
-        for (int i = 0; i < 50; ++i)
+        for (int i = 0; i < 10; ++i)
         {
             discreteActionsOut[i] = 0;
         }
@@ -171,7 +184,20 @@ public class GeneratorAgent : Agent
         //dr.enabled = true;
     }
 
+    private void freezeMario()
+    {
+        // stop mario from requesting decisions
+        dr = marioAgent.GetComponent<DecisionRequester>();
+        Destroy(dr);
+    }
 
+    private void unfreezeMario()
+    {
+        // make mario go back to request decisions
+        dr = marioAgent.AddComponent<DecisionRequester>();
+        dr.DecisionPeriod = marioDecisionRequesterPeriod;
+        dr.TakeActionsBetweenDecisions = marioDecisionRequesterActionsBetweenDecisions;
+    }
 
 
     // Update is called once per frame

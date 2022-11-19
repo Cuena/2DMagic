@@ -440,7 +440,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 5022602860645237092, guid: 1f4c6d138332fd849a7a177fe7d83318, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: Generator
   TeamId: 0
   m_UseChildSensors: 1
@@ -725,7 +725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize

@@ -160,8 +160,10 @@ public class MarioAgent : Agent
         // reward al generador
         gen.AddReward(-50f);
         //fail = false;
-        Finish();
+        
+        Reset();
         GameManager.Instance.ResetLevel();
+        Finish();
     }
 
     public void LoseLevel()
@@ -179,10 +181,11 @@ public class MarioAgent : Agent
         //}
         gen.AddReward(50f);
 
-        Finish();
+        
 
         Reset();
-        GameManager.Instance.ResetLevel(1f);
+        GameManager.Instance.ResetLevel();
+        Finish();
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------

@@ -67,29 +67,27 @@ public class GridManager : MonoBehaviour
 
 
 
-    public void insertVector(int[,] grid, int[] rv)
+    public void insertVector(int[] rv)
     {
-        Debug.Log("*** = " + String.Join("",
-             new List<int>(rv)
-             .ConvertAll(i => i.ToString())
-             .ToArray()));
+        
         for (int i = 0; i < 50; i++)
         {
-            grid[9, i] = 0;
+            Grid[9, i] = 0;
             
         }
 
+        print("+++  SE HA LLAMADO");
 
         for (int j = 0; j < 10; j++)
         {
-            grid[9, rv[j]] = 1;
+            Grid[9, 7 + rv[j]] = 2;
         }
 
 
-        for (int i = 0; i < 7; i++)
-        {
-            grid[9, i] = 0;
-        }
+        //for (int i = 0; i < 7; i++)
+        //{
+        //    grid[9, i] = 0;
+        //}
 
     }
 
@@ -133,7 +131,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public int[,] generateBaseMap(int maxLength, int[] rv)
+    public int[] generateBaseMap(int maxLength, int[] rv)
     {
         var rnd = new Random();
 
@@ -166,7 +164,7 @@ public class GridManager : MonoBehaviour
         }
 
         //insertRandomHoles(Grid, 3, 2);
-        insertVector(Grid, rv);
+        insertVector(rv);
 
         var p = rnd.Next(8, 48);
         Grid[8, w-2] = 3;
@@ -192,7 +190,16 @@ public class GridManager : MonoBehaviour
 
         }
 
-        return Grid;
+        var ret = new int[50];
+        for (int i = 0; i < 50; i++)
+        {
+            ret[i] = Grid[9, i];
+        }
+        Debug.Log("+++ = " + String.Join("",
+             new List<int>(ret)
+             .ConvertAll(i => i.ToString())
+             .ToArray()));
+        return ret;
     }
   
 

@@ -5,6 +5,12 @@ using UnityEngine;
 public class DeathBarrier : MonoBehaviour
 {
     public MarioAgent agent;
+
+    private void Start()
+    {
+        agent = GameObject.FindWithTag("Player").GetComponent<MarioAgent>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
