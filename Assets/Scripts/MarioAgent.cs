@@ -30,6 +30,9 @@ public class MarioAgent : Agent
     public GeneratorAgent gen;
 
     private int curriculum_stage = 3;
+
+    public int[] floor;
+
     public override void Initialize()
     {
         camera = Camera.main;
@@ -46,13 +49,19 @@ public class MarioAgent : Agent
     {
          
         // TODO: normalize positions
-        sensor.AddObservation(rigidbody.transform.position.x);
+        //sensor.AddObservation(rigidbody.transform.position.x);
         sensor.AddObservation(rigidbody.transform.position.y);
 
         sensor.AddObservation(velocity);
 
         sensor.AddObservation(grounded);
         sensor.AddObservation(jumping);
+
+        //print("Floor length from marios perspective: " + floor.Length);
+        //for (int i = 0; i < floor.Length; i++)
+        //{
+        //    sensor.AddObservation(floor[i]);
+        //}
     }
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
@@ -66,17 +75,22 @@ public class MarioAgent : Agent
             timeRemaining -= Time.deltaTime;
 
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-            AddReward(-0.0000000001f * (timeReward - timeRemaining));
+            AddReward(-0.00000001f * (timeReward - timeRemaining));
 
         }
         else
         {
             //AddReward(-99999999999.0f * Mathf.Abs(rigidbody.position.x-GameObject.FindGameObjectWithTag("Win").transform.position.x) );
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
+            
             AddReward(agentSettings.deathByTimeoutReward);
+
+            DestroyAll();
+            Reset();
+            GameManager.Instance.ResetLevel();
             Finish();
             print("TERMINADO POR TIEMPO");
-            GameManager.Instance.ResetLevel(0f);
+            //GameManager.Instance.ResetLevel(0f);
             timeRemaining = 240;
 
         }
@@ -86,17 +100,17 @@ public class MarioAgent : Agent
            
             case 1:
                 direction = -1f;
-                //AddReward(-1f);
+                if (curriculum_stage <= 1) AddReward(-1f);
                 break;
             case 2:
                 direction = 1f;
-                if (curriculum_stage == 0)
-                {
-                    AddReward(1f);
-                }
+                if (curriculum_stage <= 1) AddReward(1f);
                 break;
 
         }
+
+        float pos_reward = transform.position.x * 0.000001f;
+        AddReward(pos_reward * pos_reward);
 
         HorizontalMovement(direction);
 
@@ -143,10 +157,25 @@ public class MarioAgent : Agent
     {
         print("Reset on EPISODE BEGIN");
 
-        curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("mario_learning", 3.0f);
+        curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("stage", 3.0f);
 
         Reset();
 
+    }
+
+    private void DestroyAll()
+    {
+        GameObject[] terr = GameObject.FindGameObjectsWithTag("terrain");
+        foreach (GameObject t in terr)
+        {
+            GameObject.Destroy(t);
+        }
+
+        GameObject[] spikes = GameObject.FindGameObjectsWithTag("Lose");
+        foreach (GameObject s in spikes)
+        {
+            GameObject.Destroy(s);
+        }
     }
 
 
@@ -166,10 +195,12 @@ public class MarioAgent : Agent
         // reward al generador
         gen.AddReward(-50f);
         //fail = false;
-        
+
+        DestroyAll();
         Reset();
         GameManager.Instance.ResetLevel();
         Finish();
+
     }
 
     public void LoseLevel()
@@ -187,8 +218,8 @@ public class MarioAgent : Agent
         //}
         gen.AddReward(50f);
 
-        
 
+        DestroyAll();
         Reset();
         GameManager.Instance.ResetLevel();
         Finish();
@@ -236,7 +267,7 @@ public class MarioAgent : Agent
         {
             velocity.y = jumpForce;
             jumping = true;
-            AddReward(agentSettings.jumpReward);
+            //if (curriculum_stage == 0) AddReward(agentSettings.jumpReward);
         }
 
     }

@@ -78,23 +78,11 @@ public class GridManager : MonoBehaviour
         }
 
         print("+++  SE HA LLAMADO");
-        int addedHoles = 0;
-
-        int maxAllowedHoles = 0;
-        int curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("mario_learning", 3.0f);
-
-        if (curriculum_stage == 0) maxAllowedHoles = 0;
-        if (curriculum_stage == 1) maxAllowedHoles = 2;
-        if (curriculum_stage == 2) maxAllowedHoles = 5;
-        if (curriculum_stage == 3) maxAllowedHoles = 10;
-
         for (int j = 0; j < rv.Length; j++)
         {
             if (rv[j] < 50)
             {
-                Grid[9, rv[j]] = 1;
-                addedHoles += 1;
-                if (addedHoles >= maxAllowedHoles) break;
+                Grid[9, rv[j]] = 2;
             }
         }
 

@@ -79,3 +79,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 /Assets/Checkpoints.meta
+
+/Assets/Demonstrations
+Assets/*.demo
+Assets/demonstrations_*
+Assets/Demonstrations/*

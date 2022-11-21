@@ -16,7 +16,9 @@ MonoBehaviour:
   maxJumpHeight: 4.5
   maxJumpTime: 1
   flagReward: 100
-  stepReward: -1
-  dieReward: -10
+  stepReward: -100
+  dieReward: -100
+  deathByTimeoutReward: -100
+  jumpReward: -2
   startingPos: {x: 3.5, y: -6.5}
   reloadScene: 0
