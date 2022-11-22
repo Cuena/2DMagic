@@ -176,7 +176,7 @@ MonoBehaviour:
   m_RayLength: 203
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967233
+    m_Bits: 4294967232
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
@@ -458,6 +458,63 @@ MonoBehaviour:
   NumStepsToRecord: 0
   DemonstrationName: demonstrations
   DemonstrationDirectory: Assets/Demonstrations
+--- !u!1 &1174692093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1174692094}
+  - component: {fileID: 1174692095}
+  m_Layer: 3
+  m_Name: ray_terrain_forward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1174692094
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174692093}
+  m_LocalRotation: {x: 0, y: 0, z: -0.9396926, w: 0.34202018}
+  m_LocalPosition: {x: 0, y: 1.46, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 561184444}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -140}
+--- !u!114 &1174692095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174692093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f67c7e722ba14acd9153bb4488bff6e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: ray_terrain_forw
+  m_DetectableTags:
+  - terrain
+  m_RaysPerDirection: 7
+  m_MaxRayDegrees: 30
+  m_SphereCastRadius: 0.1
+  m_RayLength: 20
+  m_RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967041
+  m_ObservationStacks: 1
+  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
+  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1331134224
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,18 +564,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 10
+    VectorObservationSize: 43
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 2b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b000000
-    VectorActionSize: 2b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b0000002b000000
+      BranchSizes: 02000000
+    VectorActionSize: 02000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 35284c9f83aa5ce45be470c98406420a, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 2
   m_BehaviorName: Generator
   TeamId: 0
   m_UseChildSensors: 1
@@ -537,7 +594,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1452438424
 GameObject:
@@ -583,7 +640,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1459346404
 GameObject:
@@ -631,7 +688,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SensorName: ray_back
   m_DetectableTags:
-  - terrain
   - Lose
   m_RaysPerDirection: 7
   m_MaxRayDegrees: 30
@@ -639,7 +695,7 @@ MonoBehaviour:
   m_RayLength: 20
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967233
+    m_Bits: 4294967232
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
@@ -696,9 +752,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1932594906
+--- !u!1 &1898577930
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -706,70 +762,55 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1932594908}
-  - component: {fileID: 1932594907}
-  - component: {fileID: 1932594909}
-  m_Layer: 0
-  m_Name: DeathBarrier
-  m_TagString: Lose
+  - component: {fileID: 1898577931}
+  - component: {fileID: 1898577932}
+  m_Layer: 3
+  m_Name: ray_terrain_backward
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!61 &1932594907
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1932594906}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 100, y: 1}
-  m_EdgeRadius: 0
---- !u!4 &1932594908
+  m_IsActive: 0
+--- !u!4 &1898577931
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1932594906}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.3, y: -11.53, z: -0.1098945}
+  m_GameObject: {fileID: 1898577930}
+  m_LocalRotation: {x: 0, y: 0, z: 0.9396927, w: 0.34202018}
+  m_LocalPosition: {x: 0, y: 1.46, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1932594909
+  m_Father: {fileID: 561184444}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 140}
+--- !u!114 &1898577932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1932594906}
+  m_GameObject: {fileID: 1898577930}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d37e90038e02ce4aaf2d30b9e87780f, type: 3}
+  m_Script: {fileID: 11500000, guid: f67c7e722ba14acd9153bb4488bff6e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 561184436}
+  m_SensorName: ray_terrain_back
+  m_DetectableTags:
+  - terrain
+  m_RaysPerDirection: 7
+  m_MaxRayDegrees: 30
+  m_SphereCastRadius: 0.1
+  m_RayLength: 20
+  m_RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967041
+  m_ObservationStacks: 1
+  rayHitColor: {r: 1, g: 0, b: 0, a: 1}
+  rayMissColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &2064789429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -853,14 +894,14 @@ PrefabInstance:
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5022602860645237092, guid: 06ec95da8affe344ab4491307976e8da, type: 3}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorName
       value: MarioBehaviour
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorType
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
@@ -891,6 +932,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: timeReward
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: agentSettings
       value: 
       objectReference: {fileID: 11400000, guid: 1de976bc72a0858469b618b6d918beba, type: 2}
@@ -901,6 +946,10 @@ PrefabInstance:
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: startingPos.y
       value: 1.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: timeRemaining
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5594627484286888779, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_Material
@@ -1147,12 +1196,20 @@ PrefabInstance:
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_RayLayerMask.m_Bits
+      value: 4294967232
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_DetectableTags.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_DetectableTags.Array.data[0]
-      value: terrain
+      value: Lose
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_DetectableTags.Array.data[1]
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7626321132553883890, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_IsActive

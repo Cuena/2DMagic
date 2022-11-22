@@ -70,20 +70,18 @@ public class GridManager : MonoBehaviour
 
     public void insertVector(int[] rv)
     {
-        
+
         for (int i = 0; i < 50; i++)
         {
             Grid[9, i] = 0;
-            
+
         }
 
         print("+++  SE HA LLAMADO");
         for (int j = 0; j < rv.Length; j++)
         {
-            if (rv[j] < 50)
-            {
-                Grid[9, rv[j]] = 2;
-            }
+            //if (rv[j] + 7 < 50)
+            Grid[9, j + 7] = rv[j];
         }
 
         Grid[9, 0] = 0;
@@ -92,6 +90,7 @@ public class GridManager : MonoBehaviour
         Grid[9, 3] = 0;
         Grid[9, 4] = 0;
         Grid[9, 5] = 0;
+        Grid[9, 6] = 0;
 
 
         //for (int i = 0; i < 7; i++)
@@ -143,6 +142,7 @@ public class GridManager : MonoBehaviour
 
     public int[] generateBaseMap(int maxLength, int[] rv)
     {
+        print("desde el generateBaseMap: "+String.Join(";;", rv));
         var rnd = new Random();
         print(String.Join(',', rv));
 

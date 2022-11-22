@@ -21,8 +21,8 @@ public class MarioAgent : Agent
     public bool sliding => (inputAxis > 0f && velocity.x < 0f) || (inputAxis < 0f && velocity.x > 0f);
     public bool falling => velocity.y < 0f && !grounded;
 
-    public float timeRemaining = 240;
-    public float timeReward = 240;
+    public float timeRemaining = 60;
+    public float timeReward = 60;
 
     private bool fail = false;
 
@@ -91,7 +91,7 @@ public class MarioAgent : Agent
             Finish();
             print("TERMINADO POR TIEMPO");
             //GameManager.Instance.ResetLevel(0f);
-            timeRemaining = 240;
+            timeRemaining = 60;
 
         }
 
@@ -109,8 +109,8 @@ public class MarioAgent : Agent
 
         }
 
-        float pos_reward = transform.position.x * 0.000001f;
-        AddReward(pos_reward * pos_reward);
+        float pos_reward = transform.position.x;
+        AddReward(pos_reward * pos_reward * 0.000001f);
 
         HorizontalMovement(direction);
 
@@ -163,7 +163,7 @@ public class MarioAgent : Agent
 
     }
 
-    private void DestroyAll()
+    public void DestroyAll()
     {
         GameObject[] terr = GameObject.FindGameObjectsWithTag("terrain");
         foreach (GameObject t in terr)
@@ -267,6 +267,7 @@ public class MarioAgent : Agent
         {
             velocity.y = jumpForce;
             jumping = true;
+            AddReward(agentSettings.jumpReward);
             //if (curriculum_stage == 0) AddReward(agentSettings.jumpReward);
         }
 
