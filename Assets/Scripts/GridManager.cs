@@ -30,7 +30,7 @@ public class GridManager : MonoBehaviour
     void Start()
     {
 
-        print("grid");
+        print("GridManager start");
         Grid = new int[10, 25]   {{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
@@ -176,8 +176,7 @@ public class GridManager : MonoBehaviour
 
         //insertRandomHoles(Grid, 3, 2);
         insertVector(rv);
-
-        var p = rnd.Next(8, 48);
+        // var p = rnd.Next(8, 48);
         Grid[8, w-2] = 3;
         Grid[9, w - 2] = 0;
         //Grid[9, w - 3] = 0;

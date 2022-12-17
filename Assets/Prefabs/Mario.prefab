@@ -313,6 +313,7 @@ GameObject:
   - component: {fileID: 561184423}
   - component: {fileID: 561184424}
   - component: {fileID: 3834881693135072021}
+  - component: {fileID: 3584988168394267465}
   - component: {fileID: 1077877509006983521}
   - component: {fileID: 6108086463678812529}
   - component: {fileID: 2899042165264569590}
@@ -415,7 +416,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8437365641127575368}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f1f28da1ab8f2346bb5f057a7665bef, type: 3}
   m_Name: 
@@ -427,6 +428,29 @@ MonoBehaviour:
   agentSettings: {fileID: 11400000, guid: c7831e7a5908f7c4f9f89c853e7a2243, type: 2}
   timeRemaining: 240
   timeReward: 240
+  gen: {fileID: 0}
+  floor: 
+--- !u!114 &3584988168394267465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437365641127575368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e1d938d83b1bd4aa4bd36e0ae9e2ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 5000
+  agentSettings: {fileID: 11400000, guid: 1de976bc72a0858469b618b6d918beba, type: 2}
+  timeRemaining: 30
+  timeReward: 1
+  gen: {fileID: 0}
+  floor: 
 --- !u!114 &1077877509006983521
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,10 +16,20 @@ public class AgentSettings : ScriptableObject
     public float dieReward;
     public float deathByTimeoutReward;
     public float jumpReward;
+    public int maxCurriculumMoveReward;
+    public float moveRightReward;
+    public float moveLeftReward;
+    public float totalRightMultiReward;
+    public float generatorMarioWinReward;
+    public float generatorMarioLoseReward;
+    public int timeRemaining;
+    public float timeReward;
+    public int curriculumStage;
+
 
     public Vector2 startingPos = new Vector2(0f, 0f);
 
-    public bool reloadScene = false; 
+  
     //private int maxX = 1;
     //private int maxY = 1;
 

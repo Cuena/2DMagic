@@ -410,17 +410,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DecisionPeriod: 1
   TakeActionsBetweenDecisions: 1
---- !u!114 &561184436 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
-  m_PrefabInstance: {fileID: 8437365640566424042}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 561184418}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f1f28da1ab8f2346bb5f057a7665bef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &561184440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,7 +438,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 561184418}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
   m_Name: 
@@ -458,6 +447,17 @@ MonoBehaviour:
   NumStepsToRecord: 0
   DemonstrationName: demonstrations
   DemonstrationDirectory: Assets/Demonstrations
+--- !u!114 &561184447 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3584988168394267465, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+  m_PrefabInstance: {fileID: 8437365640566424042}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 561184418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e1d938d83b1bd4aa4bd36e0ae9e2ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1174692093
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,7 +550,7 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   gridManager: {fileID: 1681667535}
-  marioAgent: {fileID: 561184436}
+  marioAgent: {fileID: 561184447}
 --- !u!114 &1331134226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -575,11 +575,12 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 5022602860645237092, guid: 35284c9f83aa5ce45be470c98406420a, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 2
+  m_BehaviorType: 0
   m_BehaviorName: Generator
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
+  m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
 --- !u!4 &1331134227
 Transform:
@@ -901,7 +902,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
@@ -915,6 +916,10 @@ PrefabInstance:
       propertyPath: MaxStep
       value: 5000
       objectReference: {fileID: 0}
+    - target: {fileID: 3584988168394267465, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: gen
+      value: 
+      objectReference: {fileID: 1331134225}
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: gen
       value: 
@@ -926,6 +931,10 @@ PrefabInstance:
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: dieReward
       value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: flagReward
@@ -1338,4 +1347,5 @@ PrefabInstance:
     - {fileID: 5413921534369073370, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
     - {fileID: 5866420141489745608, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
     - {fileID: 2899042165264569590, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+    - {fileID: 3834881693135072021, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}

@@ -106,11 +106,7 @@ public class GeneratorAgent : Agent
         if (penalty < 0.0f)
         {
             print("=== NO PASA LAS CONSTRAINTS");
-            marioAgent.DestroyAll();
             marioAgent.Reset();
-            GameManager.Instance.ResetLevel();
-            marioAgent.EndEpisode();
-            EndEpisode();
             return;
         }
 
@@ -319,7 +315,7 @@ public class GeneratorAgent : Agent
         //discreteActionsOut[7] = 1;
         //gridManager.generateBaseMap(50, values);
 
-        //dr.enabled = true;
+        //dr.enabled = true;a
     }
 
     private void freezeMario()

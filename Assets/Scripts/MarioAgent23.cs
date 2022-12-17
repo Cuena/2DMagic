@@ -4,7 +4,7 @@ using Unity.MLAgents.Sensors;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class MarioAgent : Agent
+public class MarioAgent23 : Agent
 {
     private new Camera camera;
     private new Rigidbody2D rigidbody;
@@ -20,11 +20,17 @@ public class MarioAgent : Agent
     public bool running => Mathf.Abs(velocity.x) > 0.25f || Mathf.Abs(inputAxis) > 0.25f;
     public bool sliding => (inputAxis > 0f && velocity.x < 0f) || (inputAxis < 0f && velocity.x > 0f);
     public bool falling => velocity.y < 0f && !grounded;
-    public float timeRemaining;
-    public float timeReward;
+
+    public float timeRemaining = 60;
+    public float timeReward = 60;
+
     private bool fail = false;
+
+
     public GeneratorAgent gen;
-    private int curriculumStage;
+
+    private int curriculum_stage = 3;
+
     public int[] floor;
 
     public override void Initialize()
@@ -32,11 +38,10 @@ public class MarioAgent : Agent
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
+
         //m_SpawnAreaBounds = spawnArea.GetComponent<Collider>().bounds;
         //spawnArea.SetActive(false);
-        timeRemaining = agentSettings.timeRemaining;
-        timeReward = agentSettings.timeReward;
-        curriculumStage = agentSettings.curriculumStage;
+
         print(agentSettings);
     }
 
@@ -70,7 +75,7 @@ public class MarioAgent : Agent
             timeRemaining -= Time.deltaTime;
 
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-            // AddReward(-0.00000001f * (timeReward - timeRemaining));
+            AddReward(-0.00000001f * (timeReward - timeRemaining));
 
         }
         else
@@ -79,29 +84,33 @@ public class MarioAgent : Agent
             // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
 
             AddReward(agentSettings.deathByTimeoutReward);
-            print("TERMINADO POR TIEMPO");
+
+            DestroyAll();
             Reset();
-            timeRemaining = agentSettings.timeRemaining;
+            GameManager.Instance.ResetLevel();
+            Finish();
+            print("TERMINADO POR TIEMPO");
+            //GameManager.Instance.ResetLevel(0f);
+            timeRemaining = 60;
 
         }
+
         switch (movement)
         {
+
             case 1:
                 direction = -1f;
-                // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-                if (curriculumStage <= agentSettings.maxCurriculumMoveReward) AddReward(agentSettings.moveLeftReward);
+                if (curriculum_stage <= 1) AddReward(-1f);
                 break;
             case 2:
                 direction = 1f;
-                // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-                if (curriculumStage <= agentSettings.maxCurriculumMoveReward) AddReward(agentSettings.moveRightReward);
+                if (curriculum_stage <= 1) AddReward(1f);
                 break;
 
         }
 
-        //float pos_reward = transform.position.x;
-        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-        //AddReward(pos_reward * pos_reward * agentSettings.totalRightMultiReward);
+        float pos_reward = transform.position.x;
+        AddReward(pos_reward * pos_reward * 0.000001f);
 
         HorizontalMovement(direction);
 
@@ -111,65 +120,32 @@ public class MarioAgent : Agent
         {
             GroundedMovement(jp);
         }
+
         ApplyGravity();
+
         // move mario based on his velocity
         Vector2 position = rigidbody.position;
         position += velocity * Time.fixedDeltaTime;
+
         //// clamp within the screen bounds
         Vector2 leftEdge = camera.ScreenToWorldPoint(Vector2.zero);
         Vector2 rightEdge = camera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
+
         rigidbody.MovePosition(position);
-        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-
-        // AddReward(agentSettings.stepReward / MaxStep);
-
-
-    }
-    public override void OnEpisodeBegin()
-    {
-        print("Reset on EPISODE BEGIN");
-        curriculumStage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("stage", 3.0f);
-        Respawn();
-    }
-
-    public float getTotalRightReward()
-    {
-        return (transform.position.x - agentSettings.startingPos.x) * agentSettings.totalRightMultiReward;
-    }
-    public void WinLevel()
-    {
 
         // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-        AddReward(agentSettings.flagReward);
-        AddReward(getTotalRightReward());
-        print("===HA GANADO");
-        // reward al generador
-        gen.AddReward(agentSettings.generatorMarioWinReward);
-        //fail = false;
-        Reset();
+
+        AddReward(agentSettings.stepReward / MaxStep);
+
+
     }
 
-    public void LoseLevel()
+
+    public void Reset()
     {
-
-        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-        AddReward(agentSettings.dieReward);
-        AddReward(getTotalRightReward());
-
-        // reward al generador
-        //if (!fail)
-        //{
-        //    gen.AddReward(50f);
-        //    fail = true;
-        //}
-        gen.AddReward(agentSettings.generatorMarioLoseReward);
-
-        Reset();
-    }
-
-    public void Respawn()
-    {
+        print("-----Reset-----");
+        print(agentSettings.startingPos);
 
         rigidbody.transform.position = agentSettings.startingPos;
 
@@ -177,7 +153,15 @@ public class MarioAgent : Agent
         velocity = new Vector2(0f, 0f);
         //rigidbody.angularVelocity = 0f;
     }
+    public override void OnEpisodeBegin()
+    {
+        print("Reset on EPISODE BEGIN");
 
+        curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("stage", 3.0f);
+
+        Reset();
+
+    }
 
     public void DestroyAll()
     {
@@ -195,21 +179,51 @@ public class MarioAgent : Agent
     }
 
 
-    public void FinishEpisodes()
+    public void Finish()
     {
-        print("----EPISODES FINISH----");
         EndEpisode();
         gen.EndEpisode();
     }
 
-    public void Reset()
+    public void WinLevel()
     {
+        print("EPISODE FINISHED");
+        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
+        AddReward(agentSettings.flagReward);
+        AddReward(transform.position.x - agentSettings.startingPos.x);
+        print("===HA GANADO");
+        // reward al generador
+        gen.AddReward(-50f);
+        //fail = false;
+
         DestroyAll();
-        //Respawn();
+        Reset();
         GameManager.Instance.ResetLevel();
-        FinishEpisodes();
+        Finish();
+
     }
 
+    public void LoseLevel()
+    {
+        print("EPISODE FINISHED");
+        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
+        AddReward(agentSettings.dieReward);
+        AddReward(rigidbody.transform.position.x - agentSettings.startingPos.x);
+
+        // reward al generador
+        //if (!fail)
+        //{
+        //    gen.AddReward(50f);
+        //    fail = true;
+        //}
+        gen.AddReward(50f);
+
+
+        DestroyAll();
+        Reset();
+        GameManager.Instance.ResetLevel();
+        Finish();
+    }
 
     // ---------------------------------------------------------------------------------------------------------------------------------------------------
     // ----------------------------------------------------       MOVEMENT       -------------------------------------------------------------------------
@@ -253,9 +267,8 @@ public class MarioAgent : Agent
         {
             velocity.y = jumpForce;
             jumping = true;
-            // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
             AddReward(agentSettings.jumpReward);
-            //if (curriculumStage == 0) AddReward(agentSettings.jumpReward);
+            //if (curriculum_stage == 0) AddReward(agentSettings.jumpReward);
         }
 
     }
@@ -360,7 +373,6 @@ public class MarioAgent : Agent
 
         rigidbody.MovePosition(position);
 
-        // -------------------------------------------------------------- REWARD --------------------------------------------------------------------
-        // AddReward(agentSettings.stepReward / MaxStep);
+        AddReward(agentSettings.stepReward / MaxStep);
     }
 }

@@ -20,5 +20,13 @@ MonoBehaviour:
   dieReward: -1000
   deathByTimeoutReward: -10000
   jumpReward: -30
+  maxCurriculumMoveReward: 1
+  moveRightReward: 1
+  moveLeftReward: 0
+  totalRightMultiReward: 1
+  generatorMarioWinReward: -50
+  generatorMarioLoseReward: 50
+  timeRemaining: 30
+  timeReward: 1
+  curriculumStage: 1
   startingPos: {x: 3.5, y: -6.5}
-  reloadScene: 0
