@@ -70,7 +70,7 @@ public class GridManager : MonoBehaviour
 
 
 
-    public void insertVector(int[] rv)
+    public void insertVector(int[] rv, int[] enemyLine)
     {
 
         for (int i = 0; i < 50; i++)
@@ -80,10 +80,22 @@ public class GridManager : MonoBehaviour
         }
 
         print("+++  SE HA LLAMADO");
+        Debug.Log(" LA PUTA DE MI MADRE" + String.Join("",
+             new List<int>(enemyLine)
+             .ConvertAll(i => i.ToString())
+             .ToArray()));
         for (int j = 0; j < rv.Length; j++)
         {
             //if (rv[j] + 7 < 50)
             Grid[9, j + 7] = rv[j];
+            if (enemyLine[j] == 0)
+            {
+                Grid[2, j + 7] = 1;
+            } else
+            {
+                Grid[2, j + 7] = 5;
+            }
+
         }
 
         Grid[9, 0] = 0;
@@ -142,7 +154,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public int[] generateBaseMap(int maxLength, int[] rv)
+    public int[,] generateBaseMap(int maxLength, int[] rv, int[] enemyLine)
     {
         print("desde el generateBaseMap: "+String.Join(";;", rv));
         var rnd = new Random();
@@ -177,9 +189,9 @@ public class GridManager : MonoBehaviour
         }
 
         //insertRandomHoles(Grid, 3, 2);
-        insertVector(rv);
+        insertVector(rv, enemyLine);
         // var p = rnd.Next(8, 48);
-        Grid[8, w-2] = 5;
+        Grid[8, w-2] = 3;
         Grid[9, w - 2] = 0;
         //Grid[9, w - 3] = 0;
         var c = 0;
@@ -205,15 +217,37 @@ public class GridManager : MonoBehaviour
         }
 
         var ret = new int[50];
-        for (int i = 0; i < 50; i++)
+        var ret2 = new int[50];
+        var full_ret = new int[2,50];
+
+        for (int i = 0; i < 2; i++)
         {
-            ret[i] = Grid[9, i];
+
+
+            for (int j = 0; j < 50; j++)
+            {
+                ret[j] = Grid[9, j];
+                ret2[j] = Grid[2, j];
+                if (i == 0)
+                {
+                    full_ret[i, j] = Grid[9, j];
+                } else
+                {
+                    full_ret[i, j] = Grid[2, j];
+
+                }
+
+
+            }
         }
         Debug.Log("+++ = " + String.Join("",
              new List<int>(ret)
              .ConvertAll(i => i.ToString())
              .ToArray()));
-        return ret;
+
+       
+
+        return full_ret;
     }
   
 

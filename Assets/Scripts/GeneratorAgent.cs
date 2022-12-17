@@ -24,6 +24,9 @@ public class GeneratorAgent : Agent
 
     private int performedActionsInEpisode = 0;
     private int[] building;
+    private int[] enemyLine;
+    private int tot_enemy;
+    private int tot_fire;
 
     // Start is called before the first frame update
     public override void Initialize()
@@ -32,7 +35,9 @@ public class GeneratorAgent : Agent
         print("INICIALIZANDO GENERATOR AGENT");
         marioDecisionRequesterPeriod = dr.DecisionPeriod;
         marioDecisionRequesterActionsBetweenDecisions = dr.TakeActionsBetweenDecisions;
-        building = new int[50-7];
+        building = new int[50 - 7];
+        enemyLine = new int[50 - 7];
+
         resetBuilding();
     }
 
@@ -42,6 +47,7 @@ public class GeneratorAgent : Agent
         for (int i = 0; i < building.Length; i++)
         {
             building[i] = -1;
+            enemyLine[i] = -1;
         }
     }
 
@@ -72,7 +78,7 @@ public class GeneratorAgent : Agent
 
         float[] observations = new float[building.Length];
 
-        for (int i = 0; i < building.Length; ++i) 
+        for (int i = 0; i < building.Length; ++i)
         {
             observations[i] = building[i] * 1f;
             //values[i] = (float)random.Next();
@@ -90,20 +96,44 @@ public class GeneratorAgent : Agent
             building[i] = building[i] * 2;
         }
 
-        var ret = gridManager.generateBaseMap(50, building);
+        var full_ret = gridManager.generateBaseMap(50, building, enemyLine);
 
+        var ret = new int[50];
+        var enemy_ret = new int[50];
+
+        for (int i = 0; i < full_ret.GetLength(0); i++)
+        {
+            for (int j = 0; j < full_ret.GetLength(1); j++)
+            {
+                if (i == 0)
+                {
+                    ret[j] = full_ret[i, j];
+                }
+                else
+                {
+                    enemy_ret[j] = full_ret[i, j];
+                }
+            }
+        }
 
         Debug.Log("+++*** = " + String.Join("",
          new List<int>(ret)
          .ConvertAll(i => i.ToString())
          .ToArray()));
 
+        Debug.Log("+++*** = " + String.Join("",
+         new List<int>(enemy_ret)
+         .ConvertAll(i => i.ToString())
+         .ToArray()));
+
         // chequear las constraints 
-        float penalty = CheckConstraints(ret);
+        float penalty = CheckConstraints(ret, enemy_ret);
 
         AddReward(penalty);
 
-        if (penalty < 0.0f)
+        print("(((" +penalty);
+
+        if (penalty < 200.0f)
         {
             print("=== NO PASA LAS CONSTRAINTS");
             marioAgent.Reset();
@@ -129,12 +159,17 @@ public class GeneratorAgent : Agent
         //}
 
         int currentAction = discreteActions[0];
+        int currentActionEnemy = discreteActions[1];
+
 
         building[performedActionsInEpisode] = currentAction;
+        enemyLine[performedActionsInEpisode] = currentActionEnemy;
+
+
         performedActionsInEpisode++;
 
-        print(performedActionsInEpisode + " vamos construyendo "+ currentAction);
-        if (performedActionsInEpisode >= 50-7)
+        print(performedActionsInEpisode + " vamos construyendo " + currentAction);
+        if (performedActionsInEpisode >= 50 - 7)
         {
             print("se va a construir");
             BuildLevel();
@@ -146,7 +181,7 @@ public class GeneratorAgent : Agent
         }
     }
 
-    private float CheckConstraints(int[] values) 
+    private float CheckConstraints(int[] values, int[] enemies)
     {
         // version 1D
         float penalty = 0.0f;
@@ -157,7 +192,18 @@ public class GeneratorAgent : Agent
         // C2: que no haya x huecos consecutivos
         penalty += CheckConstraint2(values, 3);
 
-        return -penalty * 100;
+        
+        penalty += CheckConstraints3(enemies, 5);
+
+        print("===" + penalty);
+        if (penalty == 0)
+        {
+            penalty = 2;
+        }
+
+        print(tot_enemy + " mierdas");
+
+        return -penalty * 100 * (tot_enemy+1);
     }
 
     private float CheckConstraint1(int[] values)
@@ -181,12 +227,48 @@ public class GeneratorAgent : Agent
     }
 
 
+    private float CheckConstraints3(int[] enemies, int max_enemies)
+    {
+        int c = 0;
+        bool pass = true;
+        for (int i = 0; i < enemies.GetLength(0); ++i)
+        {
+            if (enemies[i] == 5)
+            {
+                c += 1;
+
+            }
+        }
+        if (c > max_enemies)
+        {
+            pass = false;
+            
+        }
+        tot_enemy = c;
+        if (pass)
+        {
+            
+
+            return -1.0f;
+        } else
+        {
+            print("=== A");
+            return 1.0f;
+        }
+    
+}
+       
+    
+
+
+
+
     private float CheckConstraint2(int[] values, int max_consecutive_holes=3)
     {
         var pass = true;
 
         int current_consecutive_holes = 0;
-
+        var w = 0;
         for (int i = 0; i < values.Length; ++i)
         {
             if (values[i] == 2)  // 2 porque es fuego
@@ -205,6 +287,17 @@ public class GeneratorAgent : Agent
                 current_consecutive_holes = 0;
             }
         }
+
+
+        for (int i = 0; i < values.GetLength(0); ++i)
+        {
+            if (values[i] == 2)
+            {
+                w += 1;
+            }
+        }
+
+        tot_fire = w;
 
         if (pass)
         {

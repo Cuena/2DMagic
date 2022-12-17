@@ -186,6 +186,11 @@ public class MarioAgent : Agent
         {
             GameObject.Destroy(t);
         }
+        GameObject[] en = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject t in en)
+        {
+            GameObject.Destroy(t);
+        }
 
         GameObject[] spikes = GameObject.FindGameObjectsWithTag("Lose");
         foreach (GameObject s in spikes)
