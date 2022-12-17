@@ -573,13 +573,14 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 35284c9f83aa5ce45be470c98406420a, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: cddab494754eab44f8e1c2f9d8cc02af, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 2
   m_BehaviorName: Generator
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
+  m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
 --- !u!4 &1331134227
 Transform:
@@ -733,12 +734,14 @@ MonoBehaviour:
   spike: {fileID: 193710054504683462, guid: 1ae7ad2d46ced2a46888f4de68874c6b, type: 3}
   flag: {fileID: 193710054504683462, guid: 31df70cedb88af24eb7fb31c89a8eee9, type: 3}
   bsky: {fileID: 193710054504683462, guid: 3b52d59cb91ce3d469b19592e3e2e5ff, type: 3}
+  enemy: {fileID: 7922011072001842161, guid: c8f54ceaaa865c9428ca3bdd3c56c236, type: 3}
   sprites:
   - {fileID: 21300134, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
   - {fileID: 21300290, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
   - {fileID: 21300368, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
   - {fileID: 21300340, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
   - {fileID: 21300136, guid: 82bc45c4496284f4c823d1b837f65ec4, type: 3}
+  - {fileID: 21300000, guid: 7eb68ac47e5fe4bbca37c767951ce034, type: 3}
 --- !u!4 &1681667536
 Transform:
   m_ObjectHideFlags: 0

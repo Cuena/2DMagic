@@ -17,6 +17,8 @@ public class GridManager : MonoBehaviour
     public GameObject spike;
     public GameObject flag;
     public GameObject bsky;
+    public GameObject enemy;
+
 
 
 
@@ -177,19 +179,19 @@ public class GridManager : MonoBehaviour
         //insertRandomHoles(Grid, 3, 2);
         insertVector(rv);
         // var p = rnd.Next(8, 48);
-        Grid[8, w-2] = 3;
+        Grid[8, w-2] = 5;
         Grid[9, w - 2] = 0;
         //Grid[9, w - 3] = 0;
         var c = 0;
-        for (int i = 0; i < w; i++)
-        {
+        //for (int i = 0; i < w; i++)
+        //{
             //print(Grid[8, i]);
 
-            if (Grid[8, i] == 3)
-            {
-                c++;
-            }
-        }
+         //   if (Grid[8, i] == 3)
+         //   {
+         //       c++;
+         //   }
+        //}
         print("JOder: "+c);
 
         for (int i = 0; i < Grid.GetLength(0); i++)
@@ -249,6 +251,14 @@ public class GridManager : MonoBehaviour
             SpriteRenderer srb = Instantiate(back, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
 
             sr.name = "Win X: " + x + "Y:" + y;
+            sr.sprite = sprites[(int)value];
+            srb.sprite = sprites[1];
+        } else if (value == 5)
+        {
+            SpriteRenderer sr = Instantiate(enemy, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
+            SpriteRenderer srb = Instantiate(back, GridToWorldPosition(x, y), Quaternion.identity).GetComponent<SpriteRenderer>();
+
+            sr.name = "Enemy X: " + x + "Y:" + y;
             sr.sprite = sprites[(int)value];
             srb.sprite = sprites[1];
         } else
