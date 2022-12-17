@@ -227,7 +227,7 @@ public class GeneratorAgent : Agent
             discreteActionsOut[i] = 0;
         }
 
-        int curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("stage", 1f);
+        int curriculum_stage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("stage", 4f);
 
 
         int maxNumHoles = 0;
@@ -251,59 +251,60 @@ public class GeneratorAgent : Agent
             maxHoleSize = 2;
         }
 
-        if (curriculum_stage >= 3)
+        if (curriculum_stage == 3)
         {
             maxNumHoles = 10;
             maxHoleSize = 2;
         }
 
+        if (curriculum_stage >= 4)
+        {
+            maxNumHoles = 20;
+            maxHoleSize = 3;
+        }
+
         //int maxHoleSize = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("max_hole_sizes", 3.0f);
 
 
-        int lastHoleStartIdx = -1;
-        bool inHole = false;
         Random random = new Random();
 
         int numAddedHoles = 0;
 
-        float per_block_prob = maxNumHoles / 50f;
-
-        do
+        float per_block_prob = maxNumHoles / 43f;
+    
+        for (int i = 0; i < performedActionsInEpisode; i++)
         {
-            numAddedHoles = 0;
-            print("generating the new holes");
-            for (int i = 0; i < discreteActionsOut.Length; i++)
+            if (building[i] == 0) numAddedHoles++;
+        }
+
+        //int[] actions = new int[discreteActionsOut.Length];
+
+        int consecutiveHoles = 0;
+        for (int i = 0; i < maxHoleSize; i++)
+        {
+            if (performedActionsInEpisode - i - 1 >= 0 && building[performedActionsInEpisode - i - 1] == 1)
             {
-                discreteActionsOut[i] = 0;
+                consecutiveHoles++;
             }
-
-            for (int i = 7; i < 50 - 3; ++i)
+            else
             {
-                if (maxHoleSize == 0) break;
-                //bool addHole = random.Next(0, 2) == 1;
-                bool addHole = random.NextDouble() < per_block_prob;
-                if (addHole && (!inHole || i - lastHoleStartIdx < maxHoleSize))
-                {
-                    //discreteActionsOut[i] = 1;  // insert hole
-                    discreteActionsOut[numAddedHoles] = i;
-                    numAddedHoles++;
-                    if (!inHole)
-                    {
-                        inHole = true;
-                        lastHoleStartIdx = i;
-                    }
-                    print("adding a hole");
-                    continue;
-                }
-
-                inHole = false;
-                if (numAddedHoles >= actionsOut.DiscreteActions.Length)
-                {
-                    break;
-                }
+                break;
             }
+        }
 
-        } while (numAddedHoles != maxNumHoles);
+        if (numAddedHoles >= maxNumHoles || maxHoleSize == 0 || consecutiveHoles >= maxHoleSize)
+        {
+            discreteActionsOut[0] = 0;  // place background
+            return;
+        }
+
+        bool addHole = random.NextDouble() < per_block_prob;
+    
+        if (addHole)
+        {
+            discreteActionsOut[0] = 1;  // place hole
+            return;
+        }
 
         int[] actions = new int[discreteActionsOut.Length];
         for (int i = 0; i < discreteActionsOut.Length; i++)
@@ -315,7 +316,7 @@ public class GeneratorAgent : Agent
         //discreteActionsOut[7] = 1;
         //gridManager.generateBaseMap(50, values);
 
-        //dr.enabled = true;a
+        //dr.enabled = true;
     }
 
     private void freezeMario()
