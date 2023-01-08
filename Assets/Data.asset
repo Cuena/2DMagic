@@ -29,4 +29,4 @@ MonoBehaviour:
   timeRemaining: 30
   timeReward: 1
   curriculumStage: 1
-  startingPos: {x: 3.5, y: -6.5}
+  startingPos: {x: 3.5, y: -3.5}
