@@ -70,32 +70,50 @@ public class GridManager : MonoBehaviour
 
 
 
-    public void insertVector(int[] rv, int[] enemyLine)
+    public void insertVector(int row, int[] rv, int[] enemyLine)
     {
 
         for (int i = 0; i < 50; i++)
         {
-            Grid[9, i] = 0;
+            Grid[row, i] = 0;
 
         }
 
         print("+++  SE HA LLAMADO");
-        Debug.Log(" LA PUTA DE MI MADRE" + String.Join("",
-             new List<int>(enemyLine)
-             .ConvertAll(i => i.ToString())
-             .ToArray()));
+        if (enemyLine != null)
+        {
+            Debug.Log(" LA PUTA DE MI MADRE" + String.Join("",
+                 new List<int>(enemyLine)
+                 .ConvertAll(i => i.ToString())
+                 .ToArray()));
+        }
+
         for (int j = 0; j < rv.Length; j++)
         {
             //if (rv[j] + 7 < 50)
-            Grid[9, j + 7] = rv[j];
-            if (enemyLine[j] == 0)
+            int tile = rv[j];
+            if (row == 9 && tile == 1)
             {
-                Grid[2, j + 7] = 1;
-            } else
-            {
-                Grid[2, j + 7] = 5;
+                // sustituir aire por fuego
+                tile = 2;
             }
+            Grid[row, j + 7] = tile;
+        }
 
+        if (enemyLine != null)
+        {
+            for (int j = 0; j < rv.Length; j++)
+            {
+                if (enemyLine[j] == 0)
+                {
+                    Grid[2, j + 7] = 1;
+                }
+                else
+                {
+                    Grid[2, j + 7] = 5;
+                }
+
+            }
         }
 
         Grid[9, 0] = 0;
@@ -189,7 +207,9 @@ public class GridManager : MonoBehaviour
         }
 
         //insertRandomHoles(Grid, 3, 2);
-        insertVector(rv, enemyLine);
+        insertVector(9, rv, enemyLine);  // suelo
+        insertVector(8, rv, null);  // base/bottom floor
+        insertVector(7, rv, null);  // base/bottom floor
         // var p = rnd.Next(8, 48);
         Grid[8, w-2] = 3;
         Grid[9, w - 2] = 0;
@@ -216,40 +236,143 @@ public class GridManager : MonoBehaviour
 
         }
 
-        var ret = new int[50];
-        var ret2 = new int[50];
-        var full_ret = new int[2,50];
-
-        for (int i = 0; i < 2; i++)
+        var full_ret = new int[4, 50];
+        for (int r = 0; r < 4; r++)
         {
-
-
-            for (int j = 0; j < 50; j++)
+            for (int i = 0; i < 50; i++)
             {
-                ret[j] = Grid[9, j];
-                ret2[j] = Grid[2, j];
-                if (i == 0)
-                {
-                    full_ret[i, j] = Grid[9, j];
-                } else
-                {
-                    full_ret[i, j] = Grid[2, j];
-
-                }
-
-
+                var k = 0;
+                if (r == 0) k = 9;
+                if (r == 1) k = 8;
+                if (r == 2) k = 7;
+                if (r == 3) k = 2;
+                full_ret[r, i] = Grid[k, i];
             }
         }
-        Debug.Log("+++ = " + String.Join("",
-             new List<int>(ret)
-             .ConvertAll(i => i.ToString())
-             .ToArray()));
-
-       
+        //Debug.Log("+++ = " + String.Join("",
+        //     new List<int>(full_ret)
+        //     .ConvertAll(i => i.ToString())
+        //     .ToArray()));
 
         return full_ret;
     }
-  
+
+
+
+
+
+
+
+
+    public int[,] generateBaseMapMultiRow(int maxLength, int[,] generatedRows, int[] enemyLine)
+    {
+        //print("desde el generateBaseMap: " + String.Join(";;", rv));
+        var rnd = new Random();
+        //print(String.Join(',', rv));
+
+        int w = rnd.Next(20, maxLength);
+
+        w = 50;
+
+        //w = Grid.GetLength(0);
+        //p = Grid.GetLength(1);
+
+        Grid = new int[10, w];
+
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < w; j++)
+            {
+                if (j == 0 || j == w - 1)
+                {
+                    Grid[i, j] = 0;
+                }
+                else if (i >= 10 - 2)
+                {
+                    Grid[i, j] = 1;
+                }
+                else
+                {
+                    Grid[i, j] = 1;
+                }
+            }
+        }
+
+        //insertRandomHoles(Grid, 3, 2);
+        print("generated row 0: " + String.Join(',', ArrayUtils.GetRow(generatedRows, 0)));
+        print("generated row 1: " + String.Join(',', ArrayUtils.GetRow(generatedRows, 1)));
+        print("generated row 2: " + String.Join(',', ArrayUtils.GetRow(generatedRows, 2)));
+        insertVector(9, ArrayUtils.GetRow(generatedRows, 0), enemyLine);  // base/bottom floor
+        insertVector(8, ArrayUtils.GetRow(generatedRows, 1), null);
+        insertVector(7, ArrayUtils.GetRow(generatedRows, 2), null);
+
+        // var p = rnd.Next(8, 48);
+        for (int i = 0; i < 7; i++)
+        {
+            Grid[8, i] = 1;
+            Grid[9, i] = 1;
+            if (i == 6)
+            {
+                Grid[9, i] = 0;
+                Grid[8, i] = 0;
+            }
+        }
+
+        Grid[6, w - 2] = 3;
+        Grid[7, w - 2] = 0;
+        Grid[8, w - 2] = 0;
+        Grid[9, w - 2] = 0;
+
+        Grid[7, w - 1] = 0;
+        Grid[8, w - 1] = 0;
+        Grid[9, w - 1] = 0;
+        Grid[2, w - 1] = 0;
+        //Grid[9, w - 3] = 0;
+        var c = 0;
+        for (int i = 0; i < w; i++)
+        {
+            //print(Grid[8, i]);
+
+            if (Grid[8, i] == 3)
+            {
+                c++;
+            }
+        }
+        print("JOder: " + c);
+
+        for (int i = 0; i < Grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < Grid.GetLength(1); j++)
+            {
+                SpawnTile(j, -1 * i, Grid[i, j]);
+            }
+
+
+        }
+
+        var full_ret = new int[4, 50];
+        for (int r = 0; r < 4; r++)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                var k = 0;
+                if (r == 0) k = 9;
+                if (r == 1) k = 8;
+                if (r == 2) k = 7;
+                if (r == 3) k = 2;
+                full_ret[r, i] = Grid[k, i];
+            }
+        }
+
+        return full_ret;
+    }
+
+
+
+
+
+
+
 
 
     public Vector2 GridToWorldPosition(int x, int y )

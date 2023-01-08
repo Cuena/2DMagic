@@ -128,6 +128,7 @@ public class MarioAgent : Agent
     }
     public override void OnEpisodeBegin()
     {
+        rigidbody = GetComponent<Rigidbody2D>();
         print("Reset on EPISODE BEGIN");
         curriculumStage = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("stage", 3.0f);
         Respawn();
@@ -170,6 +171,10 @@ public class MarioAgent : Agent
 
     public void Respawn()
     {
+        if (agentSettings == null)
+        {
+            print("eres nulo");
+        }
 
         rigidbody.transform.position = agentSettings.startingPos;
 
@@ -194,6 +199,12 @@ public class MarioAgent : Agent
 
         GameObject[] spikes = GameObject.FindGameObjectsWithTag("Lose");
         foreach (GameObject s in spikes)
+        {
+            GameObject.Destroy(s);
+        }
+
+        GameObject[] fire = GameObject.FindGameObjectsWithTag("Fire");
+        foreach (GameObject s in fire)
         {
             GameObject.Destroy(s);
         }
