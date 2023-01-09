@@ -22,6 +22,7 @@ public class AgentSettings : ScriptableObject
     public float totalRightMultiReward;
     public float generatorMarioWinReward;
     public float generatorMarioLoseReward;
+    
     public int timeRemaining;
     public float timeReward;
     public int curriculumStage;
