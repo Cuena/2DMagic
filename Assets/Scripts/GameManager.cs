@@ -61,8 +61,6 @@ public class GameManager : MonoBehaviour
         this.world = world;
         this.stage = stage;
 
-        print("load level");
-
         SceneManager.LoadScene($"{world}-{stage}");
     }
 
