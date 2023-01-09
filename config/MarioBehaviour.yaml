@@ -2,8 +2,8 @@ behaviors:
   MarioBehaviour:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 10
-      buffer_size: 100
+      batch_size: 256
+      buffer_size: 1024
       learning_rate: 3.0e-4
       beta: 5.0e-4
       epsilon: 0.2
@@ -14,19 +14,22 @@ behaviors:
       normalize: false
       hidden_units: 128
       num_layers: 2
-      use_recurrent: true
-      sequence_length: 64
-      memory_size: 256
+      #use_recurrent: true
+      #sequence_length: 64
+      #memory_size: 256
     reward_signals:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-      # gail: 
-      #   strength: 0.1
-      #   gamma: 0.99
-      #   demo_path: Assets/Demonstrations/demonstrations_buena.demo
-      #   use_actions: false
-      #   use_vail: false
+      gail: 
+        strength: 0.35
+        gamma: 0.99
+        demo_path: Assets/Demonstrations/demoman_22.demo
+        #use_actions: false
+        #use_vail: false
+    behavioral_cloning:
+      strength: 0.5
+      demo_path: Assets/Demonstrations/demoman_22.demo
     keep_checkpoints: 5
     max_steps: 200000
     time_horizon: 64

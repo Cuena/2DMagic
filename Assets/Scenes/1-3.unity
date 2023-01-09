@@ -176,7 +176,7 @@ MonoBehaviour:
   m_RayLength: 203
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967232
+    m_Bits: 4294966977
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
@@ -443,9 +443,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Record: 0
+  Record: 1
   NumStepsToRecord: 0
-  DemonstrationName: demonstrations
+  DemonstrationName: demoman
   DemonstrationDirectory: Assets/Demonstrations
 --- !u!114 &561184447 stripped
 MonoBehaviour:
@@ -573,13 +573,14 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: a45472e2e004ef941aa94ecbe64853fc, type: 3}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: Generator
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
+  m_DeterministicInference: 0
   m_ObservableAttributeHandling: 0
 --- !u!4 &1331134227
 Transform:
@@ -695,7 +696,7 @@ MonoBehaviour:
   m_RayLength: 20
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967232
+    m_Bits: 4294966977
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
@@ -896,14 +897,14 @@ PrefabInstance:
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 33879203de51aa74cba336a1f5d6605b, type: 3}
+      objectReference: {fileID: 5022602860645237092, guid: 45e6c8c6f77b33448a6715162caf1dad, type: 3}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorName
       value: MarioBehaviour
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BehaviorType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1077877509006983521, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
@@ -1207,11 +1208,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_RayLayerMask.m_Bits
-      value: 4294967232
+      value: 4294966976
       objectReference: {fileID: 0}
     - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_DetectableTags.Array.size
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_DetectableTags.Array.data[0]
@@ -1219,7 +1220,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_DetectableTags.Array.data[1]
-      value: 
+      value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_DetectableTags.Array.data[2]
+      value: terrain
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_DetectableTags.Array.data[3]
+      value: Win
+      objectReference: {fileID: 0}
+    - target: {fileID: 7599322497941635088, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
+      propertyPath: m_DetectableTags.Array.data[4]
+      value: Fire
       objectReference: {fileID: 0}
     - target: {fileID: 7626321132553883890, guid: ecde37bb63edf5c4da2db9d91fe01a20, type: 3}
       propertyPath: m_IsActive

@@ -13,20 +13,20 @@ MonoBehaviour:
   m_Name: Data
   m_EditorClassIdentifier: 
   moveSpeed: 8
-  maxJumpHeight: 4.5
-  maxJumpTime: 1
-  flagReward: 100
+  maxJumpHeight: 2.75
+  maxJumpTime: 0.65
+  flagReward: 1000
   stepReward: -100
   dieReward: -1000
   deathByTimeoutReward: -10000
   jumpReward: -30
-  maxCurriculumMoveReward: 1
-  moveRightReward: 1
-  moveLeftReward: 0
-  totalRightMultiReward: 1
+  maxCurriculumMoveReward: 2
+  moveRightReward: 2
+  moveLeftReward: -2
+  totalRightMultiReward: 10
   generatorMarioWinReward: -50
   generatorMarioLoseReward: 50
-  timeRemaining: 30
+  timeRemaining: 20
   timeReward: 1
   curriculumStage: 1
   startingPos: {x: 3.5, y: -3.5}

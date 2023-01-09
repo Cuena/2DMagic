@@ -1,8 +1,15 @@
+using Unity.MLAgents;
 using UnityEngine;
 
 public class Goomba : MonoBehaviour
 {
     public Sprite flatSprite;
+    MarioAgent agent;
+
+    private void Start()
+    {
+        agent = GameObject.FindWithTag("Player").GetComponent<MarioAgent>();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -16,6 +23,8 @@ public class Goomba : MonoBehaviour
             }
             else if (collision.transform.DotTest(transform, Vector2.down))
             {
+                agent.goombaReward();
+                print("Goomba killed :)");
                 Flatten();
             }
             else

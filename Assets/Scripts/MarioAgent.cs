@@ -14,6 +14,7 @@ public class MarioAgent : Agent
     private Vector2 velocity;
     private float inputAxis;
     public float jumpForce => (2f * agentSettings.maxJumpHeight) / (agentSettings.maxJumpTime / 2f);
+  
     public float gravity => (-2f * agentSettings.maxJumpHeight) / Mathf.Pow(agentSettings.maxJumpTime / 2f, 2f);
     public bool grounded { get; private set; }
     public bool jumping { get; private set; }
@@ -58,6 +59,12 @@ public class MarioAgent : Agent
         //    sensor.AddObservation(floor[i]);
         //}
     }
+
+    public void goombaReward()
+    {
+        AddReward(10);
+    }
+        
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
@@ -279,7 +286,8 @@ public class MarioAgent : Agent
     private void ApplyGravity()
     {
         // check if falling
-        bool falling = velocity.y < 0f || !Input.GetButton("Jump");
+        //bool falling = velocity.y < 0f || !Input.GetButton("Jump");
+        bool falling = velocity.y < 0f;
         float multiplier = falling ? 2f : 1f;
 
         // apply gravity and terminal velocity

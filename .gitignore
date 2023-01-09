@@ -84,3 +84,5 @@ crashlytics-build.properties
 Assets/*.demo
 Assets/demonstrations_*
 Assets/Demonstrations/*
+*.onnx
+
