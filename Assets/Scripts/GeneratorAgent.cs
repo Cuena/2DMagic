@@ -16,7 +16,6 @@ public class GeneratorAgent : Agent
     private static readonly int NUM_ROWS = 3;
     private static readonly int ROW_SIZE = 50 - 7;
 
-    private int[] rv;
     public GridManager gridManager;
     public MarioAgent marioAgent;
 
@@ -39,7 +38,6 @@ public class GeneratorAgent : Agent
     public override void Initialize()
     {
         dr = marioAgent.GetComponent<DecisionRequester>();
-        print("INICIALIZANDO GENERATOR AGENT");
         marioDecisionRequesterPeriod = dr.DecisionPeriod;
         marioDecisionRequesterActionsBetweenDecisions = dr.TakeActionsBetweenDecisions;
         building = new int[NUM_ROWS, ROW_SIZE];  // generamos tres filas de bloques
@@ -63,30 +61,17 @@ public class GeneratorAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        print("GENERATOR EPISODE BEGIN");
         performedActionsInEpisode = 0;
         freezeMario();
         Reset();
 
         resetBuilding();
 
-        //for (int i = 7; i < 50; i++)
-        //{
-        //    print("estamos en el bucle " + i);
-        //    RequestDecision();
-        //    //Academy.Instance.EnvironmentStep();
-        //}
-
         RequestDecision();
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        print("COLLECTEANDO OBSERVATIONS");
-        System.Random random = new System.Random();
-        //float[] values = new float[];
-
-        //float[] observations = new float[building.Length];
         float[] observations = new float[NUM_ROWS * ROW_SIZE];
 
         for (int row = 0; row < NUM_ROWS; row++)
@@ -97,7 +82,6 @@ public class GeneratorAgent : Agent
             }
         }
 
-        //print(values);
         sensor.AddObservation(observations);
         sensor.AddObservation(GetCurrentRow());
         sensor.AddObservation(GetCurrentColumn());
@@ -109,14 +93,9 @@ public class GeneratorAgent : Agent
         {
             for (int i = 0; i < building.GetLength(1); i++)
             {
-                //building[row, i] = building[row, i] * 2;  // fix porque el agujero es fuego, no aire
                 building[row, i] = building[row, i] * 1;
             }
         }
-
-        print("amiguito row 2\t" + string.Join("\t", ArrayUtils.GetRow(building, 2)));
-        print("amiguito row 1\t" + string.Join("\t", ArrayUtils.GetRow(building, 1)));
-        print("amiguito row 0\t" + string.Join("\t", ArrayUtils.GetRow(building, 0)));
 
         var full_ret = gridManager.generateBaseMapMultiRow(50, building, enemyLine);
 
@@ -138,31 +117,16 @@ public class GeneratorAgent : Agent
             }
         }
 
-        Debug.Log("+++*** = " + String.Join("",
-         new List<int>(ret)
-         .ConvertAll(i => i.ToString())
-         .ToArray()));
-
-        Debug.Log("+++*** = " + String.Join("",
-         new List<int>(enemy_ret)
-         .ConvertAll(i => i.ToString())
-         .ToArray()));
-
         // chequear las constraints 
         float penalty = CheckConstraints(ret, enemy_ret);
 
         AddReward(penalty);
 
-        print("(((" +penalty);
-
         if (!current_ep_constraints_passed)
         {
-            print("=== NO PASA LAS CONSTRAINTS");
             marioAgent.Reset();
             return;
         }
-
-        print("=== SI QUE PASA LAS CONSTRAINTS");
 
         marioAgent.floor = ret;
         unfreezeMario();
@@ -173,22 +137,11 @@ public class GeneratorAgent : Agent
 
         var discreteActions = actionBuffers.DiscreteActions;
 
-        //int numHoleIdx = discreteActions.Length;
-        //int[] values = new int[numHoleIdx];
-        //for (int i = 0; i < numHoleIdx; ++i)
-        //{
-        //    values[i] = discreteActions[i];
-        //}
-
         int currentActionFloorBottom= discreteActions[0];  // suelo
         int currentActionFloorMedium = discreteActions[1];  // suelo
         int currentActionFloorTop = discreteActions[2];  // suelo
         int currentActionEnemy = discreteActions[3];
-        //int currentRow = GetCurrentRow(performedActionsInEpisode - 1);
         int currentColumn = performedActionsInEpisode; //GetCurrentColumn(performedActionsInEpisode - 1);
-
-        //print("$$current row is: " + currentRow);
-        //print("$$current column is: " + currentColumn + "; action is " + currentActionFloorBottom);
 
         building[0, currentColumn] = currentActionFloorBottom;
         building[1, currentColumn] = currentActionFloorMedium;
@@ -214,15 +167,12 @@ public class GeneratorAgent : Agent
 
         performedActionsInEpisode++;
 
-        //print(performedActionsInEpisode + " vamos construyendo " + currentAction);
         if (performedActionsInEpisode >= ROW_SIZE)
         {
-            print("se va a construir");
             BuildLevel();
         }
         else
         {
-            print("se esta buildeando " + performedActionsInEpisode);
             RequestDecision();
         }
     }
@@ -230,7 +180,7 @@ public class GeneratorAgent : Agent
     private float CheckConstraints(int[] values, int[] enemies)
     {
         // version 1D
-        float penalty = 0.0f;
+        float penalty;
 
         // C1: 1-4 & -1 deben ser suelo
         //penalty += CheckConstraint1(values);
@@ -240,16 +190,12 @@ public class GeneratorAgent : Agent
         var penalty2 = CheckConstraint2(values, 3);
         if (penalty2 > 0.0f) current_ep_constraints_passed = false;
         
+        // C3: maximo numero de enemigos
         var penalty3 = CheckConstraints3(enemies, 5);
         if (penalty3 > 0.0f) current_ep_constraints_passed = false;
 
-        //var penalty4 = CheckConstraint4();
-        //if (penalty4 > 0.0f) current_ep_constraints_passed = false;
-
-        print("===" + penalty);
         penalty = penalty2 + penalty3;
 
-        print(tot_enemy + " mierdas");
 
         return -penalty * 100;
     }
@@ -271,7 +217,7 @@ public class GeneratorAgent : Agent
         {
             return 0.0f;
         }
-        return 1.0f;  // TODO este numero igual hay que fine tunear
+        return 1.0f;
     }
 
 
@@ -300,7 +246,6 @@ public class GeneratorAgent : Agent
             return -1.0f * (tot_enemy + 1);
         } else
         {
-            print("=== A");
             return 1.0f * (tot_enemy + 1);
         }
     }
@@ -352,44 +297,10 @@ public class GeneratorAgent : Agent
         return 1.0f * tot_fails;
     }
 
-    private float CheckConstraint4()
-    {
-        bool pass = true;
-
-        int mistakes = 0;
-
-        for (int r = building.GetLength(0) - 1; r > 0; r--)
-        {
-            for (int c = 0; c < building.GetLength(1); c++)
-            {
-                if (building[r, c] == 0)
-                {
-                    // hay suelo
-                    if (building[r - 1, c] != 0)
-                    {
-                        // si abajo hay algo que no es suelo (aire, fuego)
-                        pass = false;
-                        mistakes += 1;
-                    }
-                }
-            }
-        }
-
-        pass = mistakes == 0;
-        Academy.Instance.StatsRecorder.Add("C4_mistakes", mistakes);
-        if (pass)
-        {
-            return -1.0f;
-        }
-        return 1.0f * mistakes;
-    }
-
     public void Reset() { }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        print("HEURISTICA ====================");
-        //int[] values = new int[50]; { 0, 0, 0, 0, 0 };
 
         var discreteActionsOut = actionsOut.DiscreteActions;
 
@@ -434,34 +345,15 @@ public class GeneratorAgent : Agent
             maxHoleSize = 3;
         }
 
-        //int maxHoleSize = (int)Academy.Instance.EnvironmentParameters.GetWithDefault("max_hole_sizes", 3.0f);
-
 
         Random random = new Random();
 
         int numAddedHoles = 0;
 
         float per_block_prob = maxNumHoles / 43f;
-    
-        for (int i = 0; i < performedActionsInEpisode; i++)
-        {
-            //if (building[i] == 0) numAddedHoles++;
-        }
 
-        //int[] actions = new int[discreteActionsOut.Length];
 
         int consecutiveHoles = 0;
-        for (int i = 0; i < maxHoleSize; i++)
-        {
-            //if (performedActionsInEpisode - i - 1 >= 0 && building[performedActionsInEpisode - i - 1] == 1)
-            //{
-            //    consecutiveHoles++;
-            //}
-            //else
-            //{
-            //    break;
-            //}
-        }
 
         if (numAddedHoles >= maxNumHoles || maxHoleSize == 0 || consecutiveHoles >= maxHoleSize)
         {
@@ -482,12 +374,6 @@ public class GeneratorAgent : Agent
         {
             actions[i] = discreteActionsOut[i];
         }
-        print(string.Join(";", actions));
-
-        //discreteActionsOut[7] = 1;
-        //gridManager.generateBaseMap(50, values);
-
-        //dr.enabled = true;
     }
 
     private void freezeMario()
@@ -507,10 +393,7 @@ public class GeneratorAgent : Agent
 
 
     // Update is called once per frame
-    void Update()
-    {
-
-    }
+    void Update() {}
 
     private int GetCurrentRow()
     {

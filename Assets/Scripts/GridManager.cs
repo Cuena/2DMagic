@@ -19,20 +19,13 @@ public class GridManager : MonoBehaviour
     public GameObject bsky;
     public GameObject enemy;
 
-
-
-
     public Sprite[] sprites;
     public int[,] Grid;
     int Vertical, Horizontal;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
-
-        print("GridManager start");
         Grid = new int[10, 25]   {{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
                                     { 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
@@ -44,31 +37,7 @@ public class GridManager : MonoBehaviour
                                     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
                                     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0 }};
 
-
-
-        //Vertical = Grid.GetLength(0); // (int) Camera.main.orthographicSize;
-        //Horizontal = Grid.GetLength(1); //Vertical * (int) Camera.main.aspect *2;
-        //Cols = Horizontal*4;
-        //Rows = Vertical*4;
-        //Grid = new float[Cols, Rows];
-
-        //Grid = generateBaseMap(50);
-        
-        
-        //for (int i = 0; i < Grid.GetLength(0); i++)
-        //{
-        //    for (int j = 0; j < Grid.GetLength(1); j++)
-        //    {
-        //            SpawnTile(j, -1*i, Grid[i, j]);
-        //    }
-
-
-        //}
-
     }
-
-
-
 
     public void insertVector(int row, int[] rv, int[] enemyLine)
     {
@@ -79,18 +48,8 @@ public class GridManager : MonoBehaviour
 
         }
 
-        print("+++  SE HA LLAMADO");
-        if (enemyLine != null)
-        {
-            Debug.Log(" LA PUTA DE MI MADRE" + String.Join("",
-                 new List<int>(enemyLine)
-                 .ConvertAll(i => i.ToString())
-                 .ToArray()));
-        }
-
         for (int j = 0; j < rv.Length; j++)
         {
-            //if (rv[j] + 7 < 50)
             int tile = rv[j];
             if (row == 9 && tile == 1)
             {
@@ -124,23 +83,11 @@ public class GridManager : MonoBehaviour
         Grid[9, 5] = 0;
         Grid[9, 6] = 0;
 
-
-        //for (int i = 0; i < 7; i++)
-        //{
-        //    grid[9, i] = 0;
-        //}
-
     }
-
-
-
-
 
     public void insertRandomHoles(int[,] grid, int numHoles, int holeSize)
     {
         var rnd = new Random();
-
-
         var w = grid.GetLength(1);
 
         List<int> possible = Enumerable.Range(5, w - 10).ToList();
@@ -153,9 +100,6 @@ public class GridManager : MonoBehaviour
             possible.RemoveAt(index);
         }
 
-        //print("Random holes in ");
-        //print(string.Join(";", listNumbers));
-
         foreach (int j in listNumbers)
         {
             for (int x = 0; x < holeSize; x++)
@@ -167,23 +111,14 @@ public class GridManager : MonoBehaviour
                 Grid[9, t + 1] = 1;
                 t = t+1;
             }
-
-           
         }
     }
 
     public int[,] generateBaseMap(int maxLength, int[] rv, int[] enemyLine)
     {
-        print("desde el generateBaseMap: "+String.Join(";;", rv));
         var rnd = new Random();
-        print(String.Join(',', rv));
+        int w = 50;
 
-        int w = rnd.Next(20, maxLength);
-
-        w = 50;
-
-        //w = Grid.GetLength(0);
-        //p = Grid.GetLength(1);
 
         Grid = new int[10, w];
 
@@ -206,25 +141,13 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        //insertRandomHoles(Grid, 3, 2);
         insertVector(9, rv, enemyLine);  // suelo
         insertVector(8, rv, null);  // base/bottom floor
         insertVector(7, rv, null);  // base/bottom floor
-        // var p = rnd.Next(8, 48);
         Grid[8, w-2] = 3;
         Grid[9, w - 2] = 0;
-        //Grid[9, w - 3] = 0;
         var c = 0;
-        //for (int i = 0; i < w; i++)
-        //{
-            //print(Grid[8, i]);
-
-         //   if (Grid[8, i] == 3)
-         //   {
-         //       c++;
-         //   }
-        //}
-        print("JOder: "+c);
+        
 
         for (int i = 0; i < Grid.GetLength(0); i++)
         {
@@ -232,8 +155,6 @@ public class GridManager : MonoBehaviour
             {
                     SpawnTile(j, -1*i, Grid[i, j]);
             }
-
-
         }
 
         var full_ret = new int[4, 50];
@@ -249,33 +170,16 @@ public class GridManager : MonoBehaviour
                 full_ret[r, i] = Grid[k, i];
             }
         }
-        //Debug.Log("+++ = " + String.Join("",
-        //     new List<int>(full_ret)
-        //     .ConvertAll(i => i.ToString())
-        //     .ToArray()));
-
+        
         return full_ret;
     }
 
 
-
-
-
-
-
-
     public int[,] generateBaseMapMultiRow(int maxLength, int[,] generatedRows, int[] enemyLine)
     {
-        //print("desde el generateBaseMap: " + String.Join(";;", rv));
         var rnd = new Random();
-        //print(String.Join(',', rv));
 
-        int w = rnd.Next(20, maxLength);
-
-        w = 50;
-
-        //w = Grid.GetLength(0);
-        //p = Grid.GetLength(1);
+        int w = 50;
 
         Grid = new int[10, w];
 
@@ -298,10 +202,6 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        //insertRandomHoles(Grid, 3, 2);
-        print("generated row 0: " + String.Join(',', ArrayUtils.GetRow(generatedRows, 0)));
-        print("generated row 1: " + String.Join(',', ArrayUtils.GetRow(generatedRows, 1)));
-        print("generated row 2: " + String.Join(',', ArrayUtils.GetRow(generatedRows, 2)));
         insertVector(9, ArrayUtils.GetRow(generatedRows, 0), enemyLine);  // base/bottom floor
         insertVector(8, ArrayUtils.GetRow(generatedRows, 1), null);
         insertVector(7, ArrayUtils.GetRow(generatedRows, 2), null);
@@ -327,18 +227,14 @@ public class GridManager : MonoBehaviour
         Grid[8, w - 1] = 0;
         Grid[9, w - 1] = 0;
         Grid[2, w - 1] = 0;
-        //Grid[9, w - 3] = 0;
         var c = 0;
         for (int i = 0; i < w; i++)
         {
-            //print(Grid[8, i]);
-
             if (Grid[8, i] == 3)
             {
                 c++;
             }
         }
-        print("JOder: " + c);
 
         for (int i = 0; i < Grid.GetLength(0); i++)
         {
@@ -366,13 +262,6 @@ public class GridManager : MonoBehaviour
 
         return full_ret;
     }
-
-
-
-
-
-
-
 
 
     public Vector2 GridToWorldPosition(int x, int y )
@@ -425,12 +314,8 @@ public class GridManager : MonoBehaviour
             sr.sprite = sprites[(int)value];
         }
 
-
-
     }
+
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update() { }
 }

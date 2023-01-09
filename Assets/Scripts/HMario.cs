@@ -29,11 +29,8 @@ public class HMario : Agent
     public float timeRemaining = 240;
     public float timeReward = 240;
     public override void Initialize()
-
-
     {
 
-        print("Initialize");
         // Cache the agent rb
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody2D>();
@@ -43,28 +40,20 @@ public class HMario : Agent
 
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        //print(this.GetObservations());
-        var jp = 0;
-
-        print("----On action request----");
         var movement = actionBuffers.DiscreteActions[0];
-        jp = actionBuffers.DiscreteActions[1];
-        print("movement:" +  movement);
-       
+        var jp = actionBuffers.DiscreteActions[1];
         var direction = 0f;
-
-
 
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
             AddReward(-0.0000000001f*(timeReward - timeRemaining)); 
 
-        } else
+        } 
+        else
         {
             AddReward(-99999999999.0f);
             EndEpisode();
-            print("TERMINADO POR TIEMPO");
             GameManager.Instance.ResetLevel(0f);
             timeRemaining = 240;
 
@@ -82,13 +71,6 @@ public class HMario : Agent
 
         }
 
-        //HorizontalMovement(direction);
-
-        //Vector2 position = rigidbody.position;
-        //position += velocity * Time.fixedDeltaTime;
-
-        //rigidbody.MovePosition(position);
-        //rigidbody.AddForce(transform.right * 20f);
         HorizontalMovement(direction);
         grounded = rigidbody.Raycast(Vector2.down);
 
@@ -100,7 +82,6 @@ public class HMario : Agent
 
         ApplyGravity();
 
-
         // move mario based on his velocity
         Vector2 position = rigidbody.position;
         position += velocity * Time.fixedDeltaTime;
@@ -111,17 +92,11 @@ public class HMario : Agent
         position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
 
         rigidbody.MovePosition(position);
-
-
-
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-
-        print("heuristic");
         var discreteActionsOut = actionsOut.DiscreteActions;
-
 
         if (Input.GetKey(KeyCode.A))
         {
@@ -138,12 +113,7 @@ public class HMario : Agent
         }
 
         var jp = discreteActionsOut[1];
-
-     
-
         var direction = 0f;
-
-
 
         if (timeRemaining > 0)
         {
@@ -155,10 +125,8 @@ public class HMario : Agent
         {
             AddReward(-100.0f);
             EndEpisode();
-            print("TERMINADO POR TIEMPO");
             GameManager.Instance.ResetLevel(0f);
             timeRemaining = 240;
-
         }
 
         switch (discreteActionsOut[0])
@@ -171,16 +139,8 @@ public class HMario : Agent
                 break;
         }
 
-        //HorizontalMovement(direction);
-
-        //Vector2 position = rigidbody.position;
-        //position += velocity * Time.fixedDeltaTime;
-
-        //rigidbody.MovePosition(position);
-        //rigidbody.AddForce(transform.right * 20f);
         HorizontalMovement(direction);
         grounded = rigidbody.Raycast(Vector2.down);
-
 
         if (grounded)
         {
@@ -188,7 +148,6 @@ public class HMario : Agent
         }
 
         ApplyGravity();
-
 
         // move mario based on his velocity
         Vector2 position = rigidbody.position;
@@ -200,10 +159,6 @@ public class HMario : Agent
         position.x = Mathf.Clamp(position.x, leftEdge.x + 0.5f, rightEdge.x - 0.5f);
 
         rigidbody.MovePosition(position);
-
-
-
-
     }
     private void GroundedMovement(int jp)
     {
@@ -218,7 +173,6 @@ public class HMario : Agent
             jumping = true;
             AddReward(-1.0f);
         }
-
     }
 
     private void ApplyGravity()
@@ -255,31 +209,16 @@ public class HMario : Agent
         }
     }
 
-    /// <summary>
-    /// In the editor, if "Reset On Done" is checked then AgentReset() will be
-    /// called automatically anytime we mark done = true in an agent script.
-    /// </summary>
     public override void OnEpisodeBegin()
     {
-
-
-        //rigidbody.position = new Vector2(-29.27f, -13.16f);
         rigidbody.velocity = new Vector2(0f, 0f);
         rigidbody.angularVelocity = 0f;
-        print("ASD");
-        //GameManager.Instance.ResetLevel(2f);
     }
-
-    
-
-
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        print("OSTIAAA");
         if (collision.CompareTag("Win"))
         {
-            print("cojones");
             AddReward(9999999999999.0f);
             EndEpisode();
             GameManager.Instance.ResetLevel(0f);
@@ -287,12 +226,9 @@ public class HMario : Agent
         else if (collision.CompareTag("Lose"))
         {
             AddReward(-99999999999.0f);
-            print("Pierdes");
             EndEpisode();
             GameManager.Instance.ResetLevel(0f);
         }
     }
-
-
 
 }

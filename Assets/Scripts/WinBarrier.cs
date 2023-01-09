@@ -13,18 +13,10 @@ public class WinBarrier : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-
-            print("flag collider");
-            //other.gameObject.SetActive(false);
             var peach = GameObject.FindWithTag("Win");
-
             Destroy(peach);
-
             agent.WinLevel();
-            
         }
-      
     }
-
 
 }

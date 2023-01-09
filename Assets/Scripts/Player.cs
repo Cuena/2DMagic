@@ -31,7 +31,6 @@ public class Player : MonoBehaviour
             
             if (big)
             {
-                print("big");
                 Shrink();
             }
             else
@@ -43,12 +42,6 @@ public class Player : MonoBehaviour
 
     public void Death()
     {
-        //smallRenderer.enabled = false;
-        //bigRenderer.enabled = false;
-        //deathAnimation.enabled = true;
-
-        //GameManager.Instance.ResetLevel(3f);
-
         agent.LoseLevel();
     }
 
@@ -58,7 +51,6 @@ public class Player : MonoBehaviour
         smallRenderer.enabled = false;
         bigRenderer.enabled = false;
     }
-
 
     public void Grow()
     {

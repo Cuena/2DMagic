@@ -6,9 +6,6 @@ using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 
 
-
-
-
 public class Discriminator : Agent
 {
     private new Camera camera;
@@ -34,7 +31,6 @@ public class Discriminator : Agent
 
     private void Awake()
     {
-        print("aaaaa");
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
@@ -45,14 +41,12 @@ public class Discriminator : Agent
         camera = Camera.main;
         rigidbody = GetComponent<Rigidbody2D>();
         collider = GetComponent<Collider2D>();
-        print("ss");
     }
 
 
     public override void OnActionReceived(ActionBuffers actions)
     {
 
-        print("ESTAS?");
         if (actions.DiscreteActions[0] == 1)
         {
             HorizontalMovement(1);
@@ -109,7 +103,6 @@ public class Discriminator : Agent
     public override void OnEpisodeBegin()
     {
        GameManager.Instance.ResetLevel(2);
-       print("EMPIEZA");
 
     }
 
@@ -117,7 +110,6 @@ public class Discriminator : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         //HorizontalMovement();
-        print("HOLA");
         var discrete = actionsOut.DiscreteActions;
 
 
